@@ -1,0 +1,31 @@
+ 
+.navbar a:hover{
+  color: pink;
+  cursor: pointer;
+}
+.nav-link.active {
+    color: pink !important;
+}
+.btn-contact {
+  background-color: rgb(253, 181, 193);
+  color: white;
+  border: none;
+  border-radius: 50px; 
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-contact i {
+  font-size: 1.0rem; 
+}
+
+.btn-contact:hover {
+  background-color:white;
+  transform: translateY(-2px); 
+  box-shadow: 0 10px 20px rgb(247, 205, 212);
+  color: pink;
+}

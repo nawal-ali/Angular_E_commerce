@@ -8,7 +8,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  baseUrl = 'https://shopbag.runasp.net/api/Identity/Accounts';
+  baseUrl = 'http://shopbag.runasp.net/api/Identity/Accounts';
 
   login(credentials: any) {
     return this.http.post(`${this.baseUrl}/Login`, credentials);

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { GlobalService } from '../../core/services/global.service';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +23,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private toaster: ToasterService,
-    private router: Router
+    private router: Router,
+    private globalService: GlobalService
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +89,7 @@ export class RegisterComponent implements OnInit {
           localStorage.setItem('user', JSON.stringify(response.user));
         }
 
+        this.globalService.isLoggedIn();
         setTimeout(() => this.router.navigate(['/']), 3000);
       },
       error: (error: any) => {

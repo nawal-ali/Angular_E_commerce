@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { GlobalService } from '../../core/services/global.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private globalService: GlobalService
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +89,7 @@ export class LoginComponent implements OnInit {
         // Show success and redirect
         this.toaster.show('Login successful!', 'success');
         console.log('Login successful:', response);
+        this.globalService.isLoggedIn();
         this.router.navigate(['/home']);
       },
       error: (error: any) => {

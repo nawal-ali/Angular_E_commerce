@@ -4,7 +4,8 @@ import { ToasterComponent } from './shared/components/toaster/toaster.component'
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToasterComponent],
+  standalone: true,
+  imports: [RouterOutlet,ToasterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

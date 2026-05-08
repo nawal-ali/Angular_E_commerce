@@ -109,7 +109,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
   public toasts: ToastMessage[] = [];
   private subscription?: Subscription;
 
-  constructor(private toasterService: ToasterService) {}
+  constructor(public toasterService: ToasterService) {}
 
   ngOnInit(): void {
     this.subscription = this.toasterService.messages$.subscribe((messages) => {

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ToasterService } from '../../shared/components/toaster/toaster.service';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toaster: ToasterService
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +85,7 @@ export class LoginComponent implements OnInit {
         }
 
         // Show success and redirect
+        this.toaster.show('Login successful!', 'success');
         console.log('Login successful:', response);
         this.router.navigate(['/home']);
       },
@@ -100,6 +103,7 @@ export class LoginComponent implements OnInit {
           this.apiError = error.error?.message || 'Login failed. Please try again.';
         }
 
+        this.toaster.show(this.apiError, 'error');
         console.error('Login error:', error);
       }
     });

@@ -1,1 +1,68 @@
-<p>login works!</p>
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your account</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <div class="input-wrapper">
+                    <input type="email" id="email" formControlName="email" class="form-input"
+                        placeholder="Enter your email" [class.error]="isFieldInvalid('email')" />
+                    <span class="input-icon">📧</span>
+                </div>
+                <span class="error-message" *ngIf="isFieldInvalid('email')">
+                    Please enter a valid email address
+                </span>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-wrapper">
+                    <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+                        class="form-input" placeholder="Enter your password"
+                        [class.error]="isFieldInvalid('password')" />
+                    <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+                        {{ showPassword ? '🙈' : '👁️' }}
+                    </button>
+                </div>
+                <span class="error-message" *ngIf="isFieldInvalid('password')">
+                    Password is required (min 6 characters)
+                </span>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" formControlName="rememberMe" />
+                    <span>Remember me</span>
+                </label>
+                <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
+            </div>
+
+            <!-- API Error Message -->
+            <div class="error-alert" *ngIf="apiError">
+                <span>❌ {{ apiError }}</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn" [disabled]="!loginForm.valid || isLoading">
+                <span *ngIf="!isLoading">Sign In</span>
+                <span *ngIf="isLoading" class="spinner">⏳ Signing in...</span>
+            </button>
+
+            <!-- Sign Up Link -->
+            <div class="signup-link">
+                <p>Don't have an account? <a href="/register">Sign up here</a></p>
+            </div>
+        </form>
+
+        <!-- Decorative Elements -->
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+    </div>
+</div>

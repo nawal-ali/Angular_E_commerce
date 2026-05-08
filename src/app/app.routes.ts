@@ -6,6 +6,7 @@ import { RegisterComponent } from './features/register/register.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { AboutComponent } from './pages/about/about.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -26,6 +27,7 @@ export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  {path:'profile/:id', component:ProfileComponent},
 
 
   { path: '**', redirectTo: 'home' }

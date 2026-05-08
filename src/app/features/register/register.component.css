@@ -1,0 +1,127 @@
+:host {
+  --primary-color: #DB3022;
+  --primary-color-light: #E85A4F;
+  --primary-color-dark: #B8261B;
+  --background-card: #ffffff;
+  --surface: #fdf7f5;
+  --text-color: #262626;
+  --muted-color: #707070;
+}
+
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--surface) 0%, #fff8f6 100%);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--background-card);
+  border: 1px solid rgba(219, 48, 34, 0.12);
+}
+
+.card-top {
+  padding: 40px 32px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+}
+
+.card-top .badge {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.card-top h2 {
+  margin-bottom: 0.5rem;
+  color: #fff;
+  font-size: 2rem;
+}
+
+.card-top p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.card-body {
+  padding: 32px;
+}
+
+.input-group-text {
+  background: rgba(219, 48, 34, 0.08);
+  border-right: 0;
+  color: var(--primary-color-dark);
+}
+
+.form-control {
+  border-left: 0;
+  border-radius: 0 0.55rem 0.55rem 0;
+  box-shadow: none;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(219, 48, 34, 0.15);
+}
+
+.input-group .form-control {
+  border-left: 0;
+}
+
+.input-group .form-control:first-child {
+  border-radius: 0.55rem 0 0 0.55rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+  border: none;
+  box-shadow: 0 14px 30px rgba(219, 48, 34, 0.18);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background: linear-gradient(135deg, var(--primary-color-dark), var(--primary-color));
+}
+
+.registration-help {
+  border-top: 1px solid rgba(219, 48, 34, 0.12);
+  padding-top: 22px;
+}
+
+.registration-help p {
+  margin-bottom: 1rem;
+  color: var(--muted-color);
+}
+
+.login-link p {
+  margin-bottom: 0;
+  color: var(--muted-color);
+}
+
+.login-link a {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .register-card {
+    border-radius: 20px;
+  }
+
+  .card-top {
+    padding: 28px 20px;
+  }
+
+  .card-body {
+    padding: 24px 20px;
+  }
+}

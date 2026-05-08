@@ -5,9 +5,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
+
 @Component({
  selector: 'app-flash-sale',
-  imports: [CommonModule],
+  imports: [CommonModule ],
   templateUrl: './flash-sale.component.html',
   styleUrl: './flash-sale.component.css' ,
 })

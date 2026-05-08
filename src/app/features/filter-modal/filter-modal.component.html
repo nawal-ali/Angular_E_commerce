@@ -1,0 +1,46 @@
+<div class="filter-wrapper border rounded-3 p-4 bg-white mb-4 shadow-sm position-relative">
+  <button class="btn-close position-absolute top-0 end-0 m-3" (click)="closeFilters()"></button>
+  <h5 class="fw-bold mb-4">Filters</h5>
+
+  <div class="row">
+    <!-- Brands Section -->
+    <div class="col-md-6 mb-4 border-end">
+      <label class="fw-semibold mb-3">Brands</label>
+      <div class="brand-scroll-area custom-scrollbar">
+        <div class="form-check mb-2" *ngFor="let brand of brands">
+          <input class="form-check-input custom-checkbox" type="checkbox" 
+                 [id]="'brand' + brand.id"
+                 (change)="onBrandChange(brand.name, $event)">
+          <label class="form-check-label" [for]="'brand' + brand.id">{{brand.name}}</label>
+        </div>
+      </div>
+    </div>
+
+     <!-- Price Ranges Section   -->
+    <div class="col-md-6 mb-4">
+      <label class="fw-semibold mb-3">Price Ranges</label>
+      <div class="price-options">
+        <div class="form-check mb-2">
+          <input class="form-check-input custom-checkbox" type="radio" name="price" id="p1" (change)="onPriceChange(10, 50, $event)">
+          <label class="form-check-label" for="p1">$10 - $50</label>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input custom-checkbox" type="radio" name="price" id="p2" (change)="onPriceChange(50, 100, $event)">
+          <label class="form-check-label" for="p2">$50 - $100</label>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input custom-checkbox" type="radio" name="price" id="p3" (change)="onPriceChange(100, 150, $event)">
+          <label class="form-check-label" for="p3">$100 - $150</label>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input custom-checkbox" type="radio" name="price" id="p4" (change)="onPriceChange(150, 200, $event)">
+          <label class="form-check-label" for="p4">$150 - $200</label>
+        </div>
+         <div class="form-check mb-2">
+          <input class="form-check-input custom-checkbox" type="radio" name="price" id="p5" (change)="onPriceChange(200, 250, $event)">
+          <label class="form-check-label" for="p4">$200 - $250</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,7 +5,7 @@ import { FlashSaleComponent } from '../../features/flash-sale/flash-sale.compone
 
 @Component({
   selector: 'app-home',
-  imports: [FlashSaleComponent],
+  imports: [FlashSaleComponent ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

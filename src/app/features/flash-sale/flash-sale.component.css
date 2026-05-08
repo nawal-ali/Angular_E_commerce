@@ -1,0 +1,87 @@
+.flash-sale-container {
+  width:100% ; 
+  background: linear-gradient(180deg, #f8e4e4 0%, #ffb2ab 100%);
+  min-height: 100vh;
+  padding-bottom: 50px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.flash-title {
+  font-weight: bold;
+  color: black ;
+  font-size: 22px ;
+}
+
+.timer-box {
+  background: rgba(255, 255, 255, 0.623);
+  padding: 5px;
+  border-radius: 8px;
+  min-width: 60px;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  align-items: center;
+}
+
+
+.timer-box span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff4d6d;
+}
+
+.product-card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s;
+}
+
+.product-card:hover { transform: translateY(-7px); }
+
+.badge-discount {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: #DB3022; color: white;
+  padding: 2px 8px;
+  border-radius: 4px; font-size: 0.8rem;
+}
+ /* Segoe UI  */
+
+.badge-flash{
+  position: absolute;
+  top: 10px; right: 10px;
+  background: #ffcc00; color: #000;
+    padding: 3px 8px;
+   border-radius: 4px; font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.btn-add-cart {
+  background-color: #DB3022;
+  color: white;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #888;
+  margin-left: 15px;
+  font-size: 0.8rem;
+}
+
+.current-price {
+  font-weight: bold;
+  color: #DB3022;
+  font-size: 1.1rem;
+}
+
+.loading{
+    display: flex !important;
+    text-align: center !important;
+    justify-content: center !important;
+    font-size:22px ;
+}

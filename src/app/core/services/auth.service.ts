@@ -18,8 +18,8 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/Register`, user);
   }
 
-  ConfirmEmail(token: string, id: number) {
-    return this.http.get(`${this.baseUrl}/ConfirmEmail?token=${token}&email=${id}`);
+  ConfirmEmail(token: string, userId: number) {
+    return this.http.get(`${this.baseUrl}/ConfirmEmail?token=${token}&email=${userId}`);
   }
 
   ResendEmailConfirmation(email: string) {

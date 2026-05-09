@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-single-product',
@@ -14,7 +15,7 @@ export class SingleProductComponent implements OnInit {
  
   product: any; 
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient ,private cartService: CartService) {}
    
   selectedSize: string = 'M'; 
   selectedColor: string = '#042433';  
@@ -47,4 +48,20 @@ export class SingleProductComponent implements OnInit {
         error: (err) => console.error('Error fetching product:', err)
       });
   }
+  
+
+// 2. استخدامها عند الضغط على زر Add to Cart
+addToCart() {
+  this.cartService.addToCart(this.product.id).subscribe({
+    next: () => {
+      alert('تمت الإضافة بنجاح!');
+      // نطلب من الـ API العدد الجديد ونحدث الـ Navbar
+      this.cartService.getCartItems().subscribe(items => {
+        this.cartService.updateCount(items.length);
+      });
+    }
+  });
 }
+
+
+  }

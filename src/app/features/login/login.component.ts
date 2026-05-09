@@ -62,8 +62,9 @@ export class LoginComponent implements OnInit {
     this.apiError = '';
 
     const credentials = {
-      email: this.loginForm.get('email')?.value,
-      password: this.loginForm.get('password')?.value
+      emailOrUserName: this.loginForm.get('email')?.value,
+      password: this.loginForm.get('password')?.value,
+      rememberMe: this.loginForm.get('rememberMe')?.value
     };
 
     this.authService.login(credentials).subscribe({
@@ -83,7 +84,7 @@ export class LoginComponent implements OnInit {
         // Store remember me preference
         if (this.loginForm.get('rememberMe')?.value) {
           localStorage.setItem('rememberMe', 'true');
-          localStorage.setItem('rememberedEmail', credentials.email);
+          localStorage.setItem('rememberedEmail', credentials.emailOrUserName);
         }
 
         // Show success and redirect

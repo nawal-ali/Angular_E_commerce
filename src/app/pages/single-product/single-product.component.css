@@ -1,0 +1,120 @@
+   
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-left {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-right {
+  animation: slideInRight 0.8s ease-out 0.2s forwards; 
+  opacity: 0;
+}
+
+.product-image-card {
+  transition: transform 0.3s ease;
+  background: #f9f9f9;
+  height: 500px !important;
+  background-position: center;
+  background-size: contain;
+}
+
+.main-img {
+    transition: 0.5s ease;
+}
+
+.product-image-card:hover .main-img {
+    transform: scale(1.08);  
+}
+
+
+.size-box {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fce4e4;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+.size-box:hover{border: 1px solid #e3342f;}
+.size-box.active {
+    background-color: #e3342f;
+    color: white;
+    transform: scale(1.1);
+}
+
+.color-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+}
+
+.color-circle.active {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px #042433; 
+}
+
+.btn-add-to-cart{
+  background-color: #e3342f;
+  color: white;
+  
+
+ }
+ 
+.back-navigation {
+  margin-top: 20px;
+}
+
+ 
+.back-link {
+  text-decoration: none;
+  color: #555;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+ 
+.icon-circle {
+  width: 32px;
+  height: 32px;
+  background-color: #f8f9fa;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+
+ .back-link:hover {
+  color: #e3342f;  
+}
+
+.back-link:hover .icon-circle {
+  background-color: #e3342f;
+  color: white;
+  border-color: #e3342f; 
+  transform: translateX(-5px); 
+}
+
+.ls-1 {
+  letter-spacing: 1px;
+}

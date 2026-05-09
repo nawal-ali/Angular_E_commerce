@@ -84,7 +84,7 @@
 .product-card {
   border-radius: 15px;
   overflow: hidden;
-  transition: transform 0.2s ease ,
+  transition: transform 0.3s ease ,
   box-shadow 0.2s ease; 
   width: 100%;
   border: 1px solid rgb(235, 232, 232) !important;
@@ -95,7 +95,7 @@
   box-shadow: 0 15px 20px rgba(0,0,0,0.1) !important;
 }
 
-/* Fixing Image Aspect Ratio as per image_2.png */
+
 .card-img-wrapper {
   position: relative;
   width: 100%;
@@ -113,6 +113,7 @@
   height: 100%;
   object-fit: contain;  
   padding: 10px;  
+  cursor: pointer;
 }
 
 .product-name {
@@ -131,6 +132,39 @@
 
 .text-warning {
   color: #FBBF24 !important;  
+}
+.card-img-wrapper:hover img {
+    transform: scale(1.05);   
+    transition: 0.4s ease;
+}
+.product-actions {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease-in-out;
+}
+
+.product-card:hover .product-actions {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.action-btn {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #DB3022 !important;     
+    color: white !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
 
 /* Price Section Styles */

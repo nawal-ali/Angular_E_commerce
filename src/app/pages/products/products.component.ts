@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Subscription, map } from 'rxjs';
 import { FilterModalComponent } from '../../features/filter-modal/filter-modal.component';
+import { RouterLink } from '@angular/router';
 
 
 interface Category {
@@ -16,6 +17,7 @@ interface Product {
   price: number;
   discount: number;
   rate: number;
+  brandName: string;
   mainImg: string;
   categoryName: string;
   priceAfterDiscount?: number;
@@ -24,7 +26,7 @@ interface Product {
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [CommonModule ,FilterModalComponent],
+  imports: [CommonModule ,FilterModalComponent ,RouterLink],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
@@ -44,7 +46,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private categoriesSub?: Subscription;
   private productsSub?: Subscription;
 
-  brands: any[] = [];
+  // brands: any[] = [];
+  @Input() brands: any[] = [];
   isFilterVisible: boolean = false;  
 
  filterState = {
@@ -134,7 +137,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
     // 5. filter by brands
     if (this.filterState.selectedBrands.length > 0) {
-      result = result.filter(p => this.filterState.selectedBrands.includes(p.categoryName));
+      // result = result.filter(p => this.filterState.selectedBrands.includes(p.));
+      result = result.filter(p => this.filterState.selectedBrands.includes(p.brandName));
     }
 
     return result;

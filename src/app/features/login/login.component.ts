@@ -77,8 +77,9 @@ export class LoginComponent implements OnInit {
         }
 
         // Store user info if available
-        if (response.user) {
-          localStorage.setItem('user', JSON.stringify(response.user));
+        if (response.userId) {
+          var user ={ id: response.userId, userName: response.userName, email: response.email };
+          localStorage.setItem('user', JSON.stringify(user));
         }
 
         // Store remember me preference

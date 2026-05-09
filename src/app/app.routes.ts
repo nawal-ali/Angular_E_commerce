@@ -17,6 +17,7 @@ export const routes: Routes = [
       { path: 'product', component: ProductsComponent , title : 'Products'},
       { path: 'contact', component: ContactComponent , title : 'Contact'},
       { path: 'about', component: AboutComponent , title : 'About'},
+      {path:'profile/:id', component:ProfileComponent},
 
 
       { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -27,7 +28,6 @@ export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  {path:'profile/:id', component:ProfileComponent},
 
 
   { path: '**', redirectTo: 'home' }

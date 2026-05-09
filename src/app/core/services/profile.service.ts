@@ -10,11 +10,11 @@ export class ProfileService {
 
   baseUrl = 'http://shopbag.runasp.net/api/Identity/Profiles';
 
-  getProfile(id: number) {
+  getProfile(id: string) {
     return this.http.get(`${this.baseUrl}/${id}`);
   }
 
-  updateProfile(profileData: any, id: number) {
+  updateProfile(profileData: any, id: string) {
     return this.http.put(`${this.baseUrl}/${id}`, profileData);
   }
 }

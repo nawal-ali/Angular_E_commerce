@@ -1,3 +1,154 @@
-<div class="row w-100 m-auto">
+<div class="profile-page container py-4">
+    <div class="row gx-4">
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="profile-sidebar card">
+                <div class="profile-sidebar__header">
+                    <div class="profile-avatar">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </div>
+                    <div>
+                        <h3>{{ user.firstName || 'Your' }} {{ user.lastName || 'Name' }}</h3>
+                        <p>{{ user.email || 'Your email address' }}</p>
+                    </div>
+                </div>
 
+                <div class="profile-menu">
+                    <div class="profile-menu__title">Dashboard</div>
+                    <nav>
+                        <button type="button" *ngFor="let item of menuItems" class="profile-menu__item"
+                            [class.active]="selectedTab === item.key" (click)="selectTab(item.key)">
+                            <i class="fa-solid" [ngClass]="item.icon"></i>
+                            <span>{{ item.label }}</span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-8">
+            <div class="profile-content card">
+                <div class="profile-content__header">
+                    <h2>
+                        <span *ngIf="selectedTab === 'personal'">Personal Information</span>
+                        <span *ngIf="selectedTab === 'address'">Address Information</span>
+                        <span *ngIf="selectedTab === 'orders'">Previous Orders</span>
+                        <span *ngIf="selectedTab === 'password'">Change Password</span>
+                    </h2>
+                    <p class="text-muted">Manage your account details and see recent activity.</p>
+                </div>
+
+                <div *ngIf="isLoading" class="profile-loading">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Loading profile...</span>
+                </div>
+
+                <div *ngIf="!isLoading">
+                    <section *ngIf="selectedTab === 'personal'">
+                        <form class="profile-form" (ngSubmit)="saveProfile()">
+                            <div class="form-row">
+                                <label for="firstName">First Name</label>
+                                <input id="firstName" [(ngModel)]="user.firstName" name="firstName" type="text"
+                                    placeholder="First Name" required />
+                            </div>
+                            <div class="form-row">
+                                <label for="lastName">Last Name</label>
+                                <input id="lastName" [(ngModel)]="user.lastName" name="lastName" type="text"
+                                    placeholder="Last Name" required />
+                            </div>
+                            <div class="form-row">
+                                <label for="email">Email</label>
+                                <input id="email" [(ngModel)]="user.email" name="email" type="email" placeholder="Email"
+                                    required />
+                            </div>
+                            <div class="form-row">
+                                <label for="phone">Phone</label>
+                                <input id="phone" [(ngModel)]="user.phone" name="phone" type="tel"
+                                    placeholder="Phone number" />
+                            </div>
+                            <button type="submit" class="primary-btn" [disabled]="isSaving">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                {{ isSaving ? 'Saving...' : 'Update Profile' }}
+                            </button>
+                        </form>
+                    </section>
+
+                    <section *ngIf="selectedTab === 'address'">
+                        <form class="profile-form" (ngSubmit)="saveProfile()">
+                            <div class="form-row full-width">
+                                <label for="street">Street Address</label>
+                                <input id="street" [(ngModel)]="user.address.street" name="street" type="text"
+                                    placeholder="Street address" />
+                            </div>
+                            <div class="form-row">
+                                <label for="city">City</label>
+                                <input id="city" [(ngModel)]="user.address.city" name="city" type="text"
+                                    placeholder="City" />
+                            </div>
+                            <div class="form-row">
+                                <label for="state">State</label>
+                                <input id="state" [(ngModel)]="user.address.state" name="state" type="text"
+                                    placeholder="State" />
+                            </div>
+                            <div class="form-row">
+                                <label for="zip">ZIP Code</label>
+                                <input id="zip" [(ngModel)]="user.address.zip" name="zip" type="text"
+                                    placeholder="ZIP / Postal code" />
+                            </div>
+                            <div class="form-row full-width">
+                                <label for="country">Country</label>
+                                <input id="country" [(ngModel)]="user.address.country" name="country" type="text"
+                                    placeholder="Country" />
+                            </div>
+                            <button type="submit" class="primary-btn" [disabled]="isSaving">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                {{ isSaving ? 'Saving...' : 'Save Address' }}
+                            </button>
+                        </form>
+                    </section>
+
+                    <section *ngIf="selectedTab === 'orders'">
+                        <div class="orders-table">
+                            <div class="table-row table-header">
+                                <span>Order</span>
+                                <span>Date</span>
+                                <span>Total</span>
+                                <span>Status</span>
+                            </div>
+                            <div *ngFor="let order of previousOrders" class="table-row">
+                                <span>{{ order.orderId }}</span>
+                                <span>{{ order.date }}</span>
+                                <span>{{ order.total }}</span>
+                                <span>{{ order.status }}</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section *ngIf="selectedTab === 'password'">
+                        <form class="profile-form" (ngSubmit)="changePassword()">
+                            <div class="form-row">
+                                <label for="currentPassword">Current Password</label>
+                                <input id="currentPassword" [(ngModel)]="passwordData.currentPassword"
+                                    name="currentPassword" type="password" placeholder="Current password" required />
+                            </div>
+                            <div class="form-row">
+                                <label for="newPassword">New Password</label>
+                                <input id="newPassword" [(ngModel)]="passwordData.newPassword" name="newPassword"
+                                    type="password" placeholder="New password" required />
+                            </div>
+                            <div class="form-row">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input id="confirmPassword" [(ngModel)]="passwordData.confirmPassword"
+                                    name="confirmPassword" type="password" placeholder="Confirm new password"
+                                    required />
+                            </div>
+                            <button type="submit" class="primary-btn">
+                                <i class="fa-solid fa-key"></i>
+                                Change Password
+                            </button>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

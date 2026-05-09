@@ -23,7 +23,10 @@
  
   <!-- // product section -->
   <div class="container py-5">
-    
+
+
+  <!-- // filter , search , sort product section -->
+
     <div class="header-section mb-4">
          <!--  Search input + filter btn  + Relevance btn  -->
         <div class="actions d-flex gap-2">
@@ -41,12 +44,11 @@
         </button>
     </div>
     <app-filter-modal
-    *ngIf="isFilterVisible" 
-    [brands]="brands" 
-    (onFilterChange)="handleFilterChange($event)"
-    (onClose)="isFilterVisible = false">
-    </app-filter-modal>
-
+        *ngIf="isFilterVisible" 
+        (onFilterChange)="handleFilterChange($event)"
+        (onClose)="isFilterVisible = false">
+      </app-filter-modal>
+      <!-- [brands]="brands"  -->
       <div>
         <h1 class="page-title mb-0">All Products</h1>
         <p class="text-muted product-count mb-0">Showing {{filteredProducts.length}} products</p>
@@ -54,7 +56,7 @@
     </div>
 
     <div class="row g-4 product-grid">
-      
+      <!-- product not found  -->
       <div *ngIf="filteredProducts.length === 0" class="col-12 text-center notFount  py-5">
         <p class="text-muted">No products found in this category...</p>
       </div>
@@ -63,11 +65,24 @@
         <div class="card h-100 product-card shadow-sm border-0">
           
           <div class="card-img-wrapper">
+             <!-- // product image  -->
             <img [src]="'http://shopbag.runasp.net/Images/' + product.mainImg" 
-                 class="card-img-top" 
-                 
-                 (error)="$any($event.target).src = 'assets/placeholder-product.png'"
+                 class="card-img-top cursor-pointer" 
+                [routerLink]="['/productDetails', product.id]"
             >
+            <!-- icons during hover  -->
+      <div class="product-actions d-flex flex-column gap-2 position-absolute top-0 end-0 m-3">
+        <!--  heart icon-->
+        <button class="btn btn-light btn-sm shadow-sm rounded-circle action-btn shadow">
+          <i class="bi bi-heart"></i>
+        </button>
+
+        <!-- eye icon -->
+        <button class="btn btn-light btn-sm shadow-sm rounded-circle action-btn shadow" 
+                [routerLink]="['/productDetails', product.id]">
+          <i class="bi bi-eye"></i>
+        </button>
+      </div>
           </div>
           
           <div class="card-body d-flex flex-column p-3">

@@ -7,6 +7,7 @@ import { ProductsComponent } from './pages/products/products.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { SingleProductComponent } from './pages/single-product/single-product.component';
 
 export const routes: Routes = [
     {
@@ -17,6 +18,8 @@ export const routes: Routes = [
       { path: 'product', component: ProductsComponent , title : 'Products'},
       { path: 'contact', component: ContactComponent , title : 'Contact'},
       { path: 'about', component: AboutComponent , title : 'About'},
+      { path: 'productDetails/:id', component: SingleProductComponent , title : 'Single Product Component'},
+
       {path:'profile/:id', component:ProfileComponent},
 
 

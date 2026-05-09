@@ -4,11 +4,12 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
  selector: 'app-flash-sale',
-  imports: [CommonModule ],
+  imports: [CommonModule,RouterLink ],
   templateUrl: './flash-sale.component.html',
   styleUrl: './flash-sale.component.css' ,
 })

@@ -1,0 +1,53 @@
+.filter-wrapper {
+  border-color: #f0f0f0 !important;
+}
+
+/* Range Slider Styling */
+.custom-range-slider {
+  accent-color: #000;
+}
+
+.custom-range-slider::-webkit-slider-runnable-track {
+  background: #000;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.custom-range-slider::-webkit-slider-thumb {
+  background: #fff;
+  border: 2px solid #000;
+  margin-top: -4px;
+}
+
+/* Checkbox Styling */
+.custom-checkbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 4px !important;
+  border: 1px solid #dcdcdc;
+}
+
+.custom-checkbox:checked {
+  background-color: #000;
+  border-color: #000;
+}
+
+/* Scrollbar for Brands */
+.brand-scroll-area {
+  max-height: 150px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}

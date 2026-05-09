@@ -85,3 +85,14 @@
     justify-content: center !important;
     font-size:22px ;
 }
+.btn-sale{
+  background-color: white;
+  color: #DB3022;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.btn-sale:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px rgba(219, 48, 34, 0.4);
+}

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subscription, map } from 'rxjs';
 import { FilterModalComponent } from '../../features/filter-modal/filter-modal.component';
 import { RouterLink } from '@angular/router';
+import { CartService } from '../../core/services/cart.service';
 
 
 interface Category {
@@ -33,8 +34,7 @@ interface Product {
 export class ProductsComponent implements OnInit, OnDestroy {
   private http = inject(HttpClient);
 
-
-  // الروابط الأساسية للـ APIs
+ 
   private categoriesApiUrl = 'http://shopbag.runasp.net/api/Admin/Categories';
   private productsApiUrl = 'http://shopbag.runasp.net/api/Admin/Products';
   
@@ -172,5 +172,27 @@ export class ProductsComponent implements OnInit, OnDestroy {
  handleFilterChange(event: any) {
     this.filterState = event;
   }
+
+ constructor(private cartService: CartService) {}
  
+addToCart(product: any) {
+  this.cartService.addToCart(product.id).subscribe({
+    next: () => {
+      alert('تمت إضافة ' + product.name + ' للعربة');
+     this.refreshCartCount(); 
+     
+  //  update cart in service 
+      this.cartService.getCartItems().subscribe(items => {
+        this.cartService.updateCount(items.length);
+      });
+    }
+  });
+}
+
+
+private refreshCartCount() {
+  this.cartService.getCartItems().subscribe(items => {
+    this.cartService.updateCount(items.length);
+  });
+}
 }

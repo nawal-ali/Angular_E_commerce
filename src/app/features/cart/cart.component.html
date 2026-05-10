@@ -1,1 +1,62 @@
-<p>cart works!</p>
+<div class="cart-sidebar shadow" [class.open]="isOpen">
+  <div class="p-4 d-flex flex-column h-100">
+    
+    <div class="headOfCart d-flex justify-content-between align-items-center mb-3">
+      <p class="mb-0">Shopping Cart ({{ items.length }})</p>
+
+      <button type="button" class="btn-close" (click)="onClose()"></button>
+    </div>
+
+    <!-- body of cart  -->
+    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-muted" 
+      *ngIf="items.length === 0">
+        <!-- // Your cart is empty  -->
+      <i class="bi bi-bag-x mb-2 fs-3 opacity-50"></i>
+      <p>Your cart is empty</p>
+    </div>
+
+        <!-- // Your cart is  not empty  -->
+   
+    <div class="flex-grow-1 overflow-auto pe-2" *ngIf="items.length > 0">
+      <div class="cart-item border rounded-3 p-3 mb-3 bg-white shadow-sm" *ngFor="let item of items">
+        <div class="d-flex gap-3">
+          <img [src]="'http://shopbag.runasp.net/Images/' + item.mainImg" class="rounded-2" width="75" height="75" style="object-fit: cover;">
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <small class="text-uppercase text-muted fw-bold" style="font-size: 10px;">{{ item.brandName }}</small>
+                <h6 class="mb-1 text-dark">{{ item.name }}</h6>
+              </div>
+              <i class="bi bi-x-circle text-danger cursor-pointer" (click)="removeItem(item.id)"></i>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-0">
+              <span class="text-dark">${{ item.price }}</span>
+
+              <div class="quantity-control d-flex align-items-center border rounded-pill  px-2">
+                <button class="btn btn-sm p-1" (click)="updateQty(item, -1)"><i class="bi bi-dash"></i></button>
+                <span class="px-2 small fw-bold">{{ item.quantity }}</span>
+                <button class="btn btn-sm p-1" (click)="updateQty(item, 1)"><i class="bi bi-plus"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+    <div class="mt-auto" *ngIf="items.length > 0">
+      <div class="d-flex justify-content-left mb-3">
+        <h6 class="fs-6  " >Total : </h6>
+        <h6 class="fs-6  " > {{ getTotal() }} $</h6>
+      </div>
+
+      <button class="btn btn-checkout w-100 mb-2 ">Proceed to Checkout</button>
+
+      <button class="btn btn-continue w-100 
+      border-1" (click)="onClose()">Continue Shopping</button>
+    </div>
+
+  </div>
+</div>
+<!-- back  -->
+<div class="cart-overlay" *ngIf="isOpen" (click)="onClose()"></div>

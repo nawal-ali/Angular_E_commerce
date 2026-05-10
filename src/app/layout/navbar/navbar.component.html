@@ -7,6 +7,8 @@
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
         <li class="nav-item">
@@ -23,10 +25,9 @@
         </li>
 
       </ul>
+
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
-
-
-
+       
         @if(this.globalService.isLoggedIn()) {
         <li class="nav-item">
           <a class="nav-link" href="#"><i class="bi bi-heart"></i></a>
@@ -36,9 +37,25 @@
           <a class="nav-link"><i class="bi bi-person"></i></a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="bi bi-cart2"></i></a>
-        </li>
+      <!-- // cart icon  -->
+       <div class="nav-item cursor-pointer position-relative me-4"
+        (click)="toggleCart()">
+
+        <i class="bi bi-cart2 fs-6"></i>
+        <span class="badge position-absolute top-0 start-100 
+          translate-middle rounded-circle bg-danger" style="font-size: 0.6rem;">
+          {{ cartData.length }}
+        </span>
+       </div>
+ 
+       <!-- // cart model  -->
+        <app-cart
+          [isOpen]="isCartVisible" 
+          [items]="cartData" 
+          (closeCart)="toggleCart()">
+        </app-cart>
+   
+
         <button class="btn-contact d-flex align-items-center gap-2 px-4 py-2 shadow-soft" routerLink="/login"
           (click)="handleLogout()">
           <i class="bi bi-box-arrow-right"></i><span> Logout</span>
@@ -53,6 +70,8 @@
         </button>
         }
       </ul>
+
     </div>
+
   </div>
 </nav>

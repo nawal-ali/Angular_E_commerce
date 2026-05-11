@@ -18,21 +18,17 @@ export class ProfileComponent implements OnInit {
   userId = '';
   isLoading = true;
   isSaving = false;
-
   selectedTab: ProfileTab = 'personal';
 
+  // Flat model — mirrors the API object exactly
   user = {
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    phone: '',
-    address: {
-      street: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: ''
-    }
+    phoneNumber: '',
+    street: '',
+    city: '',
+    state: '',
+    zipCode: ''
   };
 
   passwordData = {
@@ -43,15 +39,15 @@ export class ProfileComponent implements OnInit {
 
   previousOrders = [
     { orderId: '#2301', date: '2026-04-18', total: '$135.00', status: 'Delivered' },
-    { orderId: '#2287', date: '2026-03-29', total: '$59.50', status: 'Shipped' },
-    { orderId: '#2274', date: '2026-03-12', total: '$219.99', status: 'Delivered' }
+    { orderId: '#2287', date: '2026-03-29', total: '$59.50',  status: 'Shipped'   },
+    { orderId: '#2274', date: '2026-03-12', total: '$219.99', status: 'Pending'   }
   ];
 
   menuItems: { key: ProfileTab; label: string; icon: string }[] = [
-    { key: 'personal', label: 'Personal Info', icon: 'fa-user' },
-    { key: 'address', label: 'Address Info', icon: 'fa-location-dot' },
-    { key: 'orders', label: 'Previous Orders', icon: 'fa-box-open' },
-    { key: 'password', label: 'Change Password', icon: 'fa-key' }
+    { key: 'personal', label: 'Personal Info',   icon: 'fa-user'         },
+    { key: 'address',  label: 'Address Info',    icon: 'fa-location-dot' },
+    { key: 'orders',   label: 'Previous Orders', icon: 'fa-box-open'     },
+    { key: 'password', label: 'Change Password', icon: 'fa-key'          }
   ];
 
   constructor(
@@ -72,17 +68,13 @@ export class ProfileComponent implements OnInit {
     this.profileService.getProfile(this.userId).subscribe({
       next: (profile: any) => {
         this.user = {
-          firstName: profile.firstName || profile.name || '',
-          lastName: profile.lastName || '',
-          email: profile.email || profile.userName || '',
-          phone: profile.phoneNumber || profile.phone || '',
-          address: {
-            street: profile.address?.street || profile.street || '',
-            city: profile.address?.city || profile.city || '',
-            state: profile.address?.state || profile.state || '',
-            zip: profile.address?.zip || profile.zip || '',
-            country: profile.address?.country || profile.country || ''
-          }
+          name:        profile.name        || '',
+          email:       profile.email       || profile.userName || '',
+          phoneNumber: profile.phoneNumber || profile.phone    || '',
+          street:      profile.street      || '',
+          city:        profile.city        || '',
+          state:       profile.state       || '',
+          zipCode:     profile.zipCode     || profile.zip      || ''
         };
         this.isLoading = false;
       },
@@ -93,29 +85,35 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  selectTab(tab: 'personal' | 'address' | 'orders' | 'password'): void {
+  selectTab(tab: ProfileTab): void {
     this.selectedTab = tab;
   }
 
+  // One method — always sends the full flat object the API expects
   saveProfile(): void {
     if (!this.userId) {
-      this.toaster.show('Unable to update profile - missing ID.', 'error');
+      this.toaster.show('Unable to update profile — missing ID.', 'error');
+      return;
+    }
+    if (!this.user.name.trim()) {
+      this.toaster.show('Name is required.', 'error');
+      return;
+    }
+    if (!this.user.email.trim()) {
+      this.toaster.show('Email is required.', 'error');
       return;
     }
 
     this.isSaving = true;
+
     const payload = {
-      firstName: this.user.firstName,
-      lastName: this.user.lastName,
-      email: this.user.email,
-      phoneNumber: this.user.phone,
-      address: {
-        street: this.user.address.street,
-        city: this.user.address.city,
-        state: this.user.address.state,
-        zip: this.user.address.zip,
-        country: this.user.address.country
-      }
+      name:        this.user.name.trim(),
+      email:       this.user.email.trim(),
+      phoneNumber: this.user.phoneNumber.trim(),
+      street:      this.user.street.trim(),
+      city:        this.user.city.trim(),
+      state:       this.user.state.trim(),
+      zipCode:     this.user.zipCode.trim()
     };
 
     this.profileService.updateProfile(payload, this.userId).subscribe({
@@ -124,7 +122,7 @@ export class ProfileComponent implements OnInit {
         this.isSaving = false;
       },
       error: () => {
-        this.toaster.show('Profile update failed. Please try again.', 'error');
+        this.toaster.show('Update failed. Please try again.', 'error');
         this.isSaving = false;
       }
     });
@@ -132,16 +130,26 @@ export class ProfileComponent implements OnInit {
 
   changePassword(): void {
     if (!this.passwordData.currentPassword || !this.passwordData.newPassword) {
-      this.toaster.show('Please fill in both password fields.', 'error');
+      this.toaster.show('Please fill in all password fields.', 'error');
       return;
     }
-
     if (this.passwordData.newPassword !== this.passwordData.confirmPassword) {
-      this.toaster.show('New password and confirm password do not match.', 'error');
+      this.toaster.show('Passwords do not match.', 'error');
       return;
     }
-
+    if (this.passwordData.newPassword.length < 8) {
+      this.toaster.show('New password must be at least 8 characters.', 'error');
+      return;
+    }
     this.passwordData = { currentPassword: '', newPassword: '', confirmPassword: '' };
     this.toaster.show('Password changed successfully.', 'success');
+  }
+
+  // Generates initials for the avatar circle (e.g. "Ahmed Sami" → "AS")
+  getInitials(): string {
+    const parts = this.user.name.trim().split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    if (parts[0]?.length) return parts[0][0].toUpperCase();
+    return '?';
   }
 }

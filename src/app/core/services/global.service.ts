@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalService {
 
+
   constructor() { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('authToken');

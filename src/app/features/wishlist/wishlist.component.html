@@ -1,0 +1,180 @@
+<div class="wishlist-page">
+
+  <!-- ===== HERO ===== -->
+  <div class="wishlist-hero">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div>
+          <h1 class="hero-title mb-1">
+            <i class="fa-solid fa-heart me-2"></i>My Wishlist
+          </h1>
+          <p class="hero-subtitle mb-0">
+            <span *ngIf="!isLoading">
+              {{ wishlistItems.length }} {{ wishlistItems.length === 1 ? 'item' : 'items' }} saved
+            </span>
+            <span *ngIf="isLoading">Loading your wishlist…</span>
+          </p>
+        </div>
+        <button
+          *ngIf="!isLoading && wishlistItems.length > 0"
+          class="btn btn-clear-all"
+          (click)="confirmClear()"
+          [disabled]="isClearing">
+          <i class="fa-solid fa-trash-can me-2"></i>
+          {{ isClearing ? 'Clearing…' : 'Clear All' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-5">
+
+    <!-- ===== SKELETON ===== -->
+    <div *ngIf="isLoading" class="row g-4">
+      <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let s of skeletons">
+        <div class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="p-3">
+            <div class="skeleton-line w-75 mb-2"></div>
+            <div class="skeleton-line w-50 mb-2"></div>
+            <div class="skeleton-line w-25"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== EMPTY ===== -->
+    <div *ngIf="!isLoading && wishlistItems.length === 0" class="empty-state text-center py-5">
+      <div class="empty-icon-wrap mx-auto mb-4">
+        <i class="fa-regular fa-heart fa-3x" style="color: var(--primary-color)"></i>
+      </div>
+      <h2 class="fw-bold mb-2" style="color: var(--text-primary)">Your wishlist is empty</h2>
+      <p class="mb-4" style="color: var(--text-secondary)">Browse our products and save what you love!</p>
+      <a routerLink="/products" class="btn btn-primary-custom px-4 py-2">
+        <i class="fa-solid fa-bag-shopping me-2"></i>Browse Products
+      </a>
+    </div>
+
+    <!-- ===== GRID ===== -->
+    <div *ngIf="!isLoading && wishlistItems.length > 0" class="row g-4">
+      <div
+        class="col-12 col-sm-6 col-lg-4 col-xl-3"
+        *ngFor="let item of wishlistItems">
+
+        <div class="product-card h-100 d-flex flex-column" [class.is-removing]="isRemoving(item.productId)">
+
+          <!-- Discount badge + remove btn -->
+          <div class="card-top-row">
+            <span *ngIf="item.product.discount > 0" class="badge-discount">
+              -{{ item.product.discount }}%
+            </span>
+            <span *ngIf="!item.product.discount"></span>
+            <button
+              class="btn-remove"
+              (click)="removeFromWishlist(item.productId)"
+              [disabled]="isRemoving(item.productId)"
+              title="Remove">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Image -->
+          <div class="card-img-wrap">
+            <img
+              [src]="'http://shopbag.runasp.net/Images/' + item.product.mainImg"
+              [alt]="item.product.name"
+              class="card-product-img"
+              (error)="onImgError($event)" />
+            <div class="img-overlay">
+              <button
+                class="btn btn-overlay-cart"
+                (click)="addToCart(item.productId)"
+                [disabled]="isAddingToCart(item.productId)">
+                <i class="fa-solid fa-cart-plus me-2"></i>
+                {{ isAddingToCart(item.productId) ? 'Adding…' : 'Add to Cart' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body-custom flex-grow-1 p-3">
+            <p class="product-name mb-1">{{ item.product.name }}</p>
+            <p class="product-desc text-truncate mb-2">{{ item.product.description }}</p>
+
+            <!-- Stars -->
+            <div class="d-flex align-items-center gap-1 mb-2">
+              <ng-container *ngFor="let star of getStars(item.product.rate)">
+                <i
+                  class="fa-star fa-xs"
+                  [class.fa-solid]="star === 'full' || star === 'half'"
+                  [class.fa-regular]="star === 'empty'"
+                  [class.fa-star-half-stroke]="star === 'half'"
+                  style="color: var(--warning-color)">
+                </i>
+              </ng-container>
+              <span class="rating-val ms-1">{{ item.product.rate }}/5</span>
+            </div>
+
+            <!-- Price -->
+            <div class="d-flex align-items-baseline gap-2 mb-1">
+              <span *ngIf="item.product.discount > 0" class="price-original">
+                ${{ item.product.price | number:'1.2-2' }}
+              </span>
+              <span class="price-final">
+                ${{ getDiscountedPrice(item.product.price, item.product.discount) | number:'1.2-2' }}
+              </span>
+            </div>
+
+            <p class="saved-date mb-0">
+              <i class="fa-regular fa-calendar me-1"></i>
+              Saved {{ item.addedAt | date:'MMM d, y' }}
+            </p>
+          </div>
+
+          <!-- Footer -->
+          <div class="px-3 pb-3">
+            <button
+              class="btn btn-add-cart w-100"
+              (click)="addToCart(item.productId)"
+              [disabled]="isAddingToCart(item.productId)">
+              <span *ngIf="!isAddingToCart(item.productId)">
+                <i class="fa-solid fa-bag-shopping me-2"></i>Add to Cart
+              </span>
+              <span *ngIf="isAddingToCart(item.productId)">
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>Adding…
+              </span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== CLEAR CONFIRM MODAL (plain Bootstrap 5) ===== -->
+<div class="modal fade" id="clearModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content modal-custom">
+      <div class="modal-body text-center p-4">
+        <div class="modal-warn-icon mx-auto mb-3">
+          <i class="fa-solid fa-triangle-exclamation fa-xl" style="color: var(--warning-color)"></i>
+        </div>
+        <h6 class="fw-bold mb-2">Clear Wishlist?</h6>
+        <p class="mb-4 small" style="color: var(--text-secondary)">
+          This will remove all <strong>{{ wishlistItems.length }}</strong> saved items. This cannot be undone.
+        </p>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary flex-grow-1" data-bs-dismiss="modal">Cancel</button>
+          <button
+            class="btn btn-danger-custom flex-grow-1"
+            data-bs-dismiss="modal"
+            (click)="clearWishlist()">
+            <i class="fa-solid fa-trash-can me-1"></i>Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

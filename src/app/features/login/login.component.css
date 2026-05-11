@@ -1,0 +1,213 @@
+/* Color Variables from App */
+:host {
+  --primary-color: #DB3022;
+  --primary-color-light: #E85A4F;
+  --primary-color-dark: #B8261B;
+  --primary-color-hover: #C92B1E;
+  --primary-color-transparent: #DB302233;
+
+  --black-color: #252525;
+  --dark-gray-color: #4A4A4A;
+  --gray-color: #808080;
+  --light-gray-color: #BDBDBD;
+  --border-color: #E0E0E0;
+  --background-color: #F4F4F4;
+  --white-color: #FFFFFF;
+
+  --accent-beige: #F5E6E0;
+  --accent-cream: #FFF8F6;
+  --accent-soft-pink: #FAD4CF;
+  --accent-warm-gray: #D6D1D1;
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--accent-cream) 0%, var(--accent-beige) 100%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 460px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--white-color);
+  border: 1px solid rgba(219, 48, 34, 0.12);
+  position: relative;
+}
+
+.logo-container {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+}
+
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--primary-color);
+  font-size: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.home-link:hover {
+  background: var(--white-color);
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(219, 48, 34, 0.2);
+  color: var(--primary-color-dark);
+}
+
+.card-top {
+  padding: 48px 32px 40px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+  color: var(--white-color);
+}
+
+.card-top .badge {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.card-top h2 {
+  margin-bottom: 0.5rem;
+  color: #fff;
+  font-size: 1.75rem;
+}
+
+.card-top p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.95rem;
+}
+
+.card-body {
+  padding: 32px;
+}
+
+.input-group-text {
+  background: rgba(219, 48, 34, 0.08);
+  border-right: 0;
+  border-color: var(--border-color);
+  color: var(--primary-color-dark);
+}
+
+.form-control {
+  border-left: 0;
+  border-radius: 0 0.55rem 0.55rem 0;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(219, 48, 34, 0.15);
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+  border: none;
+  box-shadow: 0 14px 30px rgba(219, 48, 34, 0.18);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--primary-color-dark), var(--primary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(219, 48, 34, 0.25);
+}
+
+.btn-outline-secondary {
+  border-color: var(--border-color);
+}
+
+.btn-outline-secondary:hover {
+  border-color: var(--primary-color);
+  background: rgba(219, 48, 34, 0.05);
+  color: var(--primary-color);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--black-color);
+  margin-bottom: 0.5rem;
+}
+
+.form-text {
+  font-size: 0.875rem;
+}
+
+.form-check-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.forgot-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.3s;
+}
+
+.forgot-link:hover {
+  color: var(--primary-color-dark);
+}
+
+.signup-link {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.signup-link:hover {
+  color: var(--primary-color-dark);
+}
+
+.alert {
+  border-radius: 0.55rem;
+  border: none;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    max-width: 100%;
+    margin: 0 10px;
+  }
+
+  .card-top {
+    padding: 40px 24px 32px;
+  }
+
+  .card-top h2 {
+    font-size: 1.5rem;
+  }
+
+  .card-body {
+    padding: 24px;
+  }
+}
+

@@ -1,0 +1,45 @@
+:root {
+
+  /* ===== Primary Colors ===== */
+    --primary-color: #DB3022;
+    --primary-color-light: #E85A4F;
+    --primary-color-dark: #B8261B;
+    --primary-color-hover: #C92B1E;
+    --primary-color-transparent: #DB302233;
+
+  /* ===== Neutral Colors ===== */
+    --black-color: #252525;
+    --dark-gray-color: #4A4A4A;
+    --gray-color: #808080;
+    --light-gray-color: #BDBDBD;
+    --border-color: #E0E0E0;
+    --background-color: #F4F4F4;
+    --white-color: #FFFFFF;
+
+  /* ===== Accent Colors ===== */
+    --accent-beige: #F5E6E0;
+    --accent-cream: #FFF8F6;
+    --accent-soft-pink: #FAD4CF;
+    --accent-warm-gray: #D6D1D1;
+
+  /* ===== Status Colors ===== */
+    --success-color: #2E7D32;
+    --warning-color: #F9A825;
+    --error-color: #D32F2F;
+    --info-color: #1976D2;
+
+  /* ===== Text Colors ===== */
+    --text-primary: #252525;
+    --text-secondary: #808080;
+    --text-light: #FFFFFF;
+    --text-muted: #A0A0A0;
+
+  /* ===== Shadow Colors ===== */
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+
+  /* ===== Gradients ===== */
+    --primary-gradient: linear-gradient(135deg, #DB3022, #E85A4F);
+    --soft-gradient: linear-gradient(135deg, #FFF8F6, #F5E6E0);
+
+}

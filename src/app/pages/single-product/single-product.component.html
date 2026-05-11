@@ -1,0 +1,85 @@
+
+
+<div class="container my-5 pt-1" *ngIf="product">
+<div class="back-navigation mb-4">
+  <a [routerLink]="['/product']" class="back-link d-inline-flex align-items-center">
+    <div class="icon-circle me-2">
+      <i class="bi bi-chevron-left"></i>
+    </div>
+    <span class="fw-bold text-uppercase ls-1">Back </span>
+  </a>
+</div>
+
+  <div class="row g-5">
+ <!-- image product  -->
+    <div class="col-md-6 animate-left">
+      <div class="product-image-card shadow-sm rounded-4 overflow-hidden" >
+        <img [src]="'http://shopbag.runasp.net/Images/' + product.mainImg" 
+             class="img-fluid w-100 main-img" 
+             [alt]="product.name">
+      </div>
+    </div>
+
+    <!--  Details product -->
+    <div class="col-md-6 animate-right">
+      <div class="product-details-container ps-md-4">
+          <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge bg-light text-danger border">{{ product.brandName }}</span>
+          <span class="text-muted small">|</span>
+          <span class="text-muted small">{{ product.categoryName }}</span>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-start mb-1">
+          <h4 class="fw-bold mb-0 text-dark">{{ product.name }}</h4>
+          <!-- <button class="btn btn-link text-dark p-0"><i class="bi bi-heart fs-4"></i></button> -->
+        </div>
+
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="text-danger fw-bold fs-5">Rs. {{ product.price - (product.price * (product.discount/100)) | number:'1.0-0' }}</span>
+          <div class="stars text-warning small">
+            <i class="bi bi-star-fill" *ngFor="let i of [1,2,3,4]"></i>
+            <i class="bi bi-star"></i>
+          </div>
+        </div>
+
+
+        <div class="mb-4">
+          <h6 class="fw-bold mb-2"> Description:</h6>
+          <p class="text-muted custom-description">{{ product.description }}</p>
+        </div>
+
+        <!--  Dynamic size -->
+        <div class="mb-4">
+          <h6 class="fw-bold mb-3">Size:</h6>
+          <div class="d-flex gap-2">
+            <div *ngFor="let size of sizes" 
+                 class="size-box" 
+                 [class.active]="selectedSize === size"
+                 (click)="selectSize(size)">
+              {{ size }}
+            </div>
+          </div>
+        </div>
+
+        <!--  Dynamic color -->
+        <div class="mb-5">
+          <h6 class="fw-bold mb-3">Colors Available:</h6>
+          <div class="d-flex gap-3">
+            <div *ngFor="let color of colors" 
+                 class="color-circle" 
+                 [style.background-color]="color"
+                 [class.active]="selectedColor === color"
+                 (click)="selectColor(color)">
+              <i class="bi bi-check2 text-white" *ngIf="selectedColor === color"></i>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-add-to-cart w-100 py-2 fw-bold shadow" (click)="addToCart()">
+          Add To Cart
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

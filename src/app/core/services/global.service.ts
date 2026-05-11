@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalService {
 
-  baseUrl = 'http://shopbag.runasp.net/api';
 
   constructor() { }
   isLoggedIn(): boolean {

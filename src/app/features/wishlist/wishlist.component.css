@@ -1,10 +1,26 @@
 
 /* Hero */
+.wishlist-page {
+  animation: fadeInUp 0.55s ease-out both;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.48), transparent 26%),
+              linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+  min-height: 100%;
+}
+
 .wishlist-hero {
   background: var(--primary-gradient);
-  padding: 44px 0 36px;
+  padding: 54px 0 42px;
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.wishlist-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(255,255,255,0.22), transparent 28%);
+  pointer-events: none;
 }
 
 .wishlist-hero::after {
@@ -16,7 +32,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 150px;
-  color: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.08);
   pointer-events: none;
 }
 
@@ -33,21 +49,21 @@
 }
 
 .btn-clear-all {
-  background: rgba(255, 255, 255, 0.14);
-  border: 1.5px solid rgba(255, 255, 255, 0.38);
+  background: rgba(219, 48, 34, 0.18);
+  border: 1.5px solid rgba(219, 48, 34, 0.32);
   color: var(--white-color);
   border-radius: 50px;
   padding: 9px 22px;
   font-weight: 600;
   font-size: 0.85rem;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
   backdrop-filter: blur(4px);
 }
 
 .btn-clear-all:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.26);
-  border-color: var(--white-color);
-  color: var(--white-color);
+  background: rgba(219, 48, 34, 0.26);
+  border-color: rgba(219, 48, 34, 0.5);
+  transform: translateY(-1px);
 }
 
 .btn-clear-all:disabled {
@@ -102,6 +118,15 @@
 }
 
 /* ---- Empty state ---- */
+.empty-state {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(54, 79, 128, 0.08);
+  padding: 48px 36px;
+  margin: 0 auto;
+  max-width: 620px;
+}
+
 .empty-icon-wrap {
   width: 100px;
   height: 100px;
@@ -115,10 +140,11 @@
 /* ---- Product card ---- */
 .product-card {
   background: var(--white-color);
-  border-radius: 18px;
+  border-radius: 22px;
   overflow: hidden;
-  box-shadow: 0 2px 14px var(--shadow-light);
+  box-shadow: 0 14px 40px rgba(47, 63, 96, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  animation: fadeInUp 0.45s ease both;
 }
 
 .product-card:hover {
@@ -215,15 +241,16 @@
 }
 
 .btn-overlay-cart {
-  background: var(--white-color);
-  color: var(--primary-color);
+  background: var(--primary-color);
+  color: var(--white-color);
   border: none;
   border-radius: 50px;
   padding: 9px 20px;
   font-weight: 700;
   font-size: 0.83rem;
   transform: translateY(8px);
-  transition: transform 0.28s ease, background 0.2s;
+  transition: transform 0.28s ease, background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 20px rgba(219, 48, 34, 0.16);
 }
 
 .product-card:hover .btn-overlay-cart {
@@ -231,7 +258,7 @@
 }
 
 .btn-overlay-cart:hover {
-  background: var(--accent-cream);
+  background: var(--primary-color-dark);
 }
 
 /* Body text */
@@ -258,6 +285,14 @@
   color: var(--text-muted);
 }
 
+.rating-star {
+  color: var(--warning-color);
+}
+
+.rating-star.fa-regular {
+  opacity: 0.55;
+}
+
 .price-original {
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -277,26 +312,38 @@
 
 /* Add to cart footer button */
 .btn-add-cart {
-  background: var(--primary-gradient);
+  background: var(--primary-color);
   color: var(--white-color);
   border: none;
   border-radius: 50px;
   padding: 10px;
   font-weight: 700;
   font-size: 0.85rem;
-  transition: opacity 0.2s, transform 0.2s;
-  box-shadow: 0 3px 10px var(--primary-color-transparent);
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 10px rgba(219, 48, 34, 0.18);
 }
 
 .btn-add-cart:hover:not(:disabled) {
   color: var(--white-color);
-  opacity: 0.88;
+  opacity: 0.96;
   transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(219, 48, 34, 0.2);
 }
 
 .btn-add-cart:disabled {
-  opacity: 0.7;
+  opacity: 0.72;
   cursor: not-allowed;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Modal */

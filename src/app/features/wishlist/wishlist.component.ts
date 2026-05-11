@@ -15,7 +15,7 @@ import { RouterModule } from '@angular/router';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { CartService } from '../../core/services/cart.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
-// import { Modal } from 'bootstrap';
+import { Modal } from 'bootstrap';
 
 interface ProductResponse {
   id: number;
@@ -92,7 +92,7 @@ export class WishlistComponent implements OnInit {
 
   confirmClear(): void {
     const el = document.getElementById('clearModal');
-    // if (el) new Modal(el).show();
+    if (el) new Modal(el).show();
   }
 
   clearWishlist(): void {

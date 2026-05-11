@@ -5,6 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalService {
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
   constructor() { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('authToken');

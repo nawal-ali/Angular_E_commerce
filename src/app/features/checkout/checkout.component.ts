@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -51,3 +52,16 @@ export class CheckoutComponent implements OnInit {
     }
   }
 }
+=======
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-checkout',
+  imports: [],
+  templateUrl: './checkout.component.html',
+  styleUrl: './checkout.component.css'
+})
+export class CheckoutComponent {
+
+}
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f

@@ -27,16 +27,24 @@
       </ul>
 
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
+<<<<<<< HEAD
        
         @if(this.globalService.isLoggedIn()) {
         <li class="nav-item">
           <a class="nav-link" href="#"><i class="bi bi-heart"></i></a>
+=======
+
+        @if(this.globalService.isLoggedIn()) {
+        <li class="nav-item" routerLink="/whishlist">
+          <a class="nav-link"><i class="bi bi-heart"></i></a>
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
         </li>
 
         <li class="nav-item" [routerLink]="['/profile', globalService.getUser()?.id]">
           <a class="nav-link"><i class="bi bi-person"></i></a>
         </li>
 
+<<<<<<< HEAD
       <!-- // cart icon  -->
        <div class="nav-item cursor-pointer position-relative me-4"
         (click)="toggleCart()">
@@ -55,6 +63,22 @@
           (closeCart)="toggleCart()">
         </app-cart>
    
+=======
+        <!-- // cart icon  -->
+        <div class="nav-item cursor-pointer position-relative me-4" (click)="toggleCart()">
+
+          <i class="bi bi-cart2 fs-6"></i>
+          <span class="badge position-absolute top-0 start-100 
+          translate-middle rounded-circle bg-danger" style="font-size: 0.6rem;">
+            {{ cartData.length }}
+          </span>
+        </div>
+
+        <!-- // cart model  -->
+        <app-cart [isOpen]="isCartVisible" [items]="cartData" (closeCart)="toggleCart()">
+        </app-cart>
+
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
 
         <button class="btn-contact d-flex align-items-center gap-2 px-4 py-2 shadow-soft" routerLink="/login"
           (click)="handleLogout()">

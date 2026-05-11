@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   userId = '';
   isLoading = true;
   isSaving = false;
+<<<<<<< HEAD
 
   selectedTab: ProfileTab = 'personal';
 
@@ -33,6 +34,19 @@ export class ProfileComponent implements OnInit {
       zip: '',
       country: ''
     }
+=======
+  selectedTab: ProfileTab = 'personal';
+
+  // Flat model — mirrors the API object exactly
+  user = {
+    name: '',
+    email: '',
+    phoneNumber: '',
+    street: '',
+    city: '',
+    state: '',
+    zipCode: ''
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
   };
 
   passwordData = {
@@ -43,6 +57,7 @@ export class ProfileComponent implements OnInit {
 
   previousOrders = [
     { orderId: '#2301', date: '2026-04-18', total: '$135.00', status: 'Delivered' },
+<<<<<<< HEAD
     { orderId: '#2287', date: '2026-03-29', total: '$59.50', status: 'Shipped' },
     { orderId: '#2274', date: '2026-03-12', total: '$219.99', status: 'Delivered' }
   ];
@@ -52,6 +67,17 @@ export class ProfileComponent implements OnInit {
     { key: 'address', label: 'Address Info', icon: 'fa-location-dot' },
     { key: 'orders', label: 'Previous Orders', icon: 'fa-box-open' },
     { key: 'password', label: 'Change Password', icon: 'fa-key' }
+=======
+    { orderId: '#2287', date: '2026-03-29', total: '$59.50',  status: 'Shipped'   },
+    { orderId: '#2274', date: '2026-03-12', total: '$219.99', status: 'Pending'   }
+  ];
+
+  menuItems: { key: ProfileTab; label: string; icon: string }[] = [
+    { key: 'personal', label: 'Personal Info',   icon: 'fa-user'         },
+    { key: 'address',  label: 'Address Info',    icon: 'fa-location-dot' },
+    { key: 'orders',   label: 'Previous Orders', icon: 'fa-box-open'     },
+    { key: 'password', label: 'Change Password', icon: 'fa-key'          }
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
   ];
 
   constructor(
@@ -72,6 +98,7 @@ export class ProfileComponent implements OnInit {
     this.profileService.getProfile(this.userId).subscribe({
       next: (profile: any) => {
         this.user = {
+<<<<<<< HEAD
           firstName: profile.firstName || profile.name || '',
           lastName: profile.lastName || '',
           email: profile.email || profile.userName || '',
@@ -83,6 +110,15 @@ export class ProfileComponent implements OnInit {
             zip: profile.address?.zip || profile.zip || '',
             country: profile.address?.country || profile.country || ''
           }
+=======
+          name:        profile.name        || '',
+          email:       profile.email       || profile.userName || '',
+          phoneNumber: profile.phoneNumber || profile.phone    || '',
+          street:      profile.street      || '',
+          city:        profile.city        || '',
+          state:       profile.state       || '',
+          zipCode:     profile.zipCode     || profile.zip      || ''
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
         };
         this.isLoading = false;
       },
@@ -93,6 +129,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+<<<<<<< HEAD
   selectTab(tab: 'personal' | 'address' | 'orders' | 'password'): void {
     this.selectedTab = tab;
   }
@@ -100,10 +137,29 @@ export class ProfileComponent implements OnInit {
   saveProfile(): void {
     if (!this.userId) {
       this.toaster.show('Unable to update profile - missing ID.', 'error');
+=======
+  selectTab(tab: ProfileTab): void {
+    this.selectedTab = tab;
+  }
+
+  // One method — always sends the full flat object the API expects
+  saveProfile(): void {
+    if (!this.userId) {
+      this.toaster.show('Unable to update profile — missing ID.', 'error');
+      return;
+    }
+    if (!this.user.name.trim()) {
+      this.toaster.show('Name is required.', 'error');
+      return;
+    }
+    if (!this.user.email.trim()) {
+      this.toaster.show('Email is required.', 'error');
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
       return;
     }
 
     this.isSaving = true;
+<<<<<<< HEAD
     const payload = {
       firstName: this.user.firstName,
       lastName: this.user.lastName,
@@ -116,6 +172,17 @@ export class ProfileComponent implements OnInit {
         zip: this.user.address.zip,
         country: this.user.address.country
       }
+=======
+
+    const payload = {
+      name:        this.user.name.trim(),
+      email:       this.user.email.trim(),
+      phoneNumber: this.user.phoneNumber.trim(),
+      street:      this.user.street.trim(),
+      city:        this.user.city.trim(),
+      state:       this.user.state.trim(),
+      zipCode:     this.user.zipCode.trim()
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
     };
 
     this.profileService.updateProfile(payload, this.userId).subscribe({
@@ -124,7 +191,11 @@ export class ProfileComponent implements OnInit {
         this.isSaving = false;
       },
       error: () => {
+<<<<<<< HEAD
         this.toaster.show('Profile update failed. Please try again.', 'error');
+=======
+        this.toaster.show('Update failed. Please try again.', 'error');
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
         this.isSaving = false;
       }
     });
@@ -132,6 +203,7 @@ export class ProfileComponent implements OnInit {
 
   changePassword(): void {
     if (!this.passwordData.currentPassword || !this.passwordData.newPassword) {
+<<<<<<< HEAD
       this.toaster.show('Please fill in both password fields.', 'error');
       return;
     }
@@ -145,3 +217,28 @@ export class ProfileComponent implements OnInit {
     this.toaster.show('Password changed successfully.', 'success');
   }
 }
+=======
+      this.toaster.show('Please fill in all password fields.', 'error');
+      return;
+    }
+    if (this.passwordData.newPassword !== this.passwordData.confirmPassword) {
+      this.toaster.show('Passwords do not match.', 'error');
+      return;
+    }
+    if (this.passwordData.newPassword.length < 8) {
+      this.toaster.show('New password must be at least 8 characters.', 'error');
+      return;
+    }
+    this.passwordData = { currentPassword: '', newPassword: '', confirmPassword: '' };
+    this.toaster.show('Password changed successfully.', 'success');
+  }
+
+  // Generates initials for the avatar circle (e.g. "Ahmed Sami" → "AS")
+  getInitials(): string {
+    const parts = this.user.name.trim().split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    if (parts[0]?.length) return parts[0][0].toUpperCase();
+    return '?';
+  }
+}
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f

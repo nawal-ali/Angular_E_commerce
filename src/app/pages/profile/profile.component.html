@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="profile-page container py-4">
     <div class="row gx-4">
         <div class="col-12 col-lg-4 mb-4">
@@ -147,8 +148,256 @@
                             </button>
                         </form>
                     </section>
+=======
+<div class="profile-page">
+
+    <!-- ===== TOP BANNER ===== -->
+    <div class="profile-banner">
+        <div class="container">
+            <div class="banner-inner">
+                <div class="banner-avatar" *ngIf="!isLoading">{{ getInitials() }}</div>
+                <div class="banner-avatar skeleton-avatar" *ngIf="isLoading"></div>
+                <div>
+                    <h1 class="banner-name">{{ user.name || 'My Account' }}</h1>
+                    <p class="banner-email">{{ user.email || '' }}</p>
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
                 </div>
             </div>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+
+    <div class="container profile-body">
+        <div class="row gx-4">
+
+            <!-- ===== SIDEBAR ===== -->
+            <div class="col-12 col-lg-3 mb-4">
+                <div class="sidebar-card">
+                    <p class="sidebar-label">Dashboard</p>
+                    <nav class="sidebar-nav">
+                        <button type="button" *ngFor="let item of menuItems" class="sidebar-item"
+                            [class.active]="selectedTab === item.key" (click)="selectTab(item.key)">
+                            <span class="sidebar-item__icon">
+                                <i class="fa-solid" [ngClass]="item.icon"></i>
+                            </span>
+                            <span>{{ item.label }}</span>
+                            <i class="fa-solid fa-chevron-right sidebar-item__arrow"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- ===== CONTENT ===== -->
+            <div class="col-12 col-lg-9">
+                <div class="content-card">
+
+                    <!-- Header -->
+                    <div class="content-header">
+                        <div class="content-header__icon">
+                            <i class="fa-solid" [ngClass]="{
+                  'fa-user':         selectedTab === 'personal',
+                  'fa-location-dot': selectedTab === 'address',
+                  'fa-box-open':     selectedTab === 'orders',
+                  'fa-key':          selectedTab === 'password'
+                }">
+                            </i>
+                        </div>
+                        <div>
+                            <h2 class="content-header__title">
+                                <span *ngIf="selectedTab === 'personal'">Personal Information</span>
+                                <span *ngIf="selectedTab === 'address'">Address Information</span>
+                                <span *ngIf="selectedTab === 'orders'">Previous Orders</span>
+                                <span *ngIf="selectedTab === 'password'">Change Password</span>
+                            </h2>
+                            <p class="content-header__sub">Manage your account details</p>
+                        </div>
+                    </div>
+
+                    <div class="content-divider"></div>
+
+                    <!-- Loading -->
+                    <div *ngIf="isLoading" class="profile-loading">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <span>Loading profile…</span>
+                    </div>
+
+                    <div *ngIf="!isLoading">
+
+                        <!-- ===== PERSONAL TAB ===== -->
+                        <section *ngIf="selectedTab === 'personal'">
+                            <form (ngSubmit)="saveProfile()">
+                                <div class="form-grid">
+
+                                    <div class="field full">
+                                        <label class="field-label">Full Name</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-user input-icon"></i>
+                                            <input [(ngModel)]="user.name" name="name" type="text" class="field-input"
+                                                placeholder="Your full name" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label class="field-label">Email Address</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-envelope input-icon"></i>
+                                            <input [(ngModel)]="user.email" name="email" type="email"
+                                                class="field-input" placeholder="you@example.com" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label class="field-label">Phone Number</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-phone input-icon"></i>
+                                            <input [(ngModel)]="user.phoneNumber" name="phoneNumber" type="tel"
+                                                class="field-input" placeholder="e.g. 111 111 111" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-footer">
+                                    <button type="submit" class="save-btn" [disabled]="isSaving">
+                                        <i class="fa-solid fa-floppy-disk me-2"></i>
+                                        {{ isSaving ? 'Saving…' : 'Save Changes' }}
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+
+                        <!-- ===== ADDRESS TAB ===== -->
+                        <section *ngIf="selectedTab === 'address'">
+                            <form (ngSubmit)="saveProfile()">
+                                <div class="form-grid">
+
+                                    <div class="field full">
+                                        <label class="field-label">Street Address</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-road input-icon"></i>
+                                            <input [(ngModel)]="user.street" name="street" type="text"
+                                                class="field-input" placeholder="123 Main St" />
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label class="field-label">City</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-city input-icon"></i>
+                                            <input [(ngModel)]="user.city" name="city" type="text" class="field-input"
+                                                placeholder="City" />
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label class="field-label">State / Province</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-map input-icon"></i>
+                                            <input [(ngModel)]="user.state" name="state" type="text" class="field-input"
+                                                placeholder="State" />
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label class="field-label">ZIP / Postal Code</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-hashtag input-icon"></i>
+                                            <input [(ngModel)]="user.zipCode" name="zipCode" type="text"
+                                                class="field-input" placeholder="12345" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-footer">
+                                    <button type="submit" class="save-btn" [disabled]="isSaving">
+                                        <i class="fa-solid fa-floppy-disk me-2"></i>
+                                        {{ isSaving ? 'Saving…' : 'Save Address' }}
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+
+                        <!-- ===== ORDERS TAB ===== -->
+                        <section *ngIf="selectedTab === 'orders'">
+                            <div class="orders-list">
+                                <div *ngFor="let order of previousOrders" class="order-row">
+                                    <div class="order-icon-wrap">
+                                        <i class="fa-solid fa-box"></i>
+                                    </div>
+                                    <div class="order-details">
+                                        <span class="order-id">{{ order.orderId }}</span>
+                                        <span class="order-date">{{ order.date }}</span>
+                                    </div>
+                                    <span class="order-total">{{ order.total }}</span>
+                                    <span class="order-status" [ngClass]="{
+                      'status-delivered': order.status === 'Delivered',
+                      'status-shipped':   order.status === 'Shipped',
+                      'status-pending':   order.status === 'Pending'
+                    }">
+                                        <i class="fa-solid me-1" [ngClass]="{
+                        'fa-check-circle':  order.status === 'Delivered',
+                        'fa-truck':         order.status === 'Shipped',
+                        'fa-clock':         order.status === 'Pending'
+                      }">
+                                        </i>
+                                        {{ order.status }}
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== PASSWORD TAB ===== -->
+                        <section *ngIf="selectedTab === 'password'">
+                            <form (ngSubmit)="changePassword()">
+                                <div class="form-grid single-col">
+
+                                    <div class="field full">
+                                        <label class="field-label">Current Password</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-lock input-icon"></i>
+                                            <input [(ngModel)]="passwordData.currentPassword" name="currentPassword"
+                                                type="password" class="field-input" placeholder="Current password"
+                                                required />
+                                        </div>
+                                    </div>
+
+                                    <div class="field full">
+                                        <label class="field-label">New Password</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-lock-open input-icon"></i>
+                                            <input [(ngModel)]="passwordData.newPassword" name="newPassword"
+                                                type="password" class="field-input" placeholder="Min. 8 characters"
+                                                required />
+                                        </div>
+                                    </div>
+
+                                    <div class="field full">
+                                        <label class="field-label">Confirm New Password</label>
+                                        <div class="input-wrap">
+                                            <i class="fa-solid fa-shield-halved input-icon"></i>
+                                            <input [(ngModel)]="passwordData.confirmPassword" name="confirmPassword"
+                                                type="password" class="field-input" placeholder="Repeat new password"
+                                                required />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-footer">
+                                    <button type="submit" class="save-btn">
+                                        <i class="fa-solid fa-key me-2"></i>Change Password
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
 </div>

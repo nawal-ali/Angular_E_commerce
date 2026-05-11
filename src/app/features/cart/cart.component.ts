@@ -1,11 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CartService } from '../../core/services/cart.service';
+<<<<<<< HEAD
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   imports: [CommonModule,RouterModule], 
+=======
+@Component({
+  selector: 'app-cart',
+  imports: [CommonModule],
+>>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })

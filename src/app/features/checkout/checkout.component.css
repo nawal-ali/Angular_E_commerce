@@ -1,0 +1,62 @@
+:root {
+  --primary-color: #DB3022;
+}
+
+.checkout-card, .summary-card {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* زر الدفع الأساسي */
+.main-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.main-btn:hover:not(:disabled) {
+  background-color: #b0261b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(219, 48, 34, 0.3);
+}
+
+.main-btn:disabled {
+  background-color: #cccccc;
+}
+
+.custom-input {
+  border-radius: 10px;
+  padding: 12px;
+  border: 1.5px solid #eee;
+  transition: border-color 0.3s;
+}
+
+.custom-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: none;
+}
+
+/* اختيارات الدفع */
+.payment-box {
+  transition: all 0.2s ease;
+}
+
+.payment-box.selected {
+  border-color: var(--primary-color) !important;
+  background-color: rgba(219, 48, 34, 0.05);
+}
+
+.custom-radio {
+  accent-color: var(--primary-color);
+}
+
+.custom-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
+ 
+.item img {
+  border: 1px solid #eee;
+}

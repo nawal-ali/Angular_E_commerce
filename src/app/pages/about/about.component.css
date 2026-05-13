@@ -1,0 +1,146 @@
+:root {
+    --primary-color: #DB3022;
+    --dark-bg: #1a1a1a;
+    --light-bg: #f9f9f9;
+    --text-color: #333;
+}
+
+.about-page {
+    overflow-x: hidden;
+  
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- Section 1: Hero --- */
+.about-hero {
+    padding: 100px 0;
+    background-color: var(--light-bg);
+
+
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.about-text { flex: 1; }
+.about-image { flex: 1; }
+
+.about-image img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 20px 20px 0px var(--primary-color); /* حركة شيك للصور */
+}
+
+.badge {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+}
+
+.highlight { color: var(--primary-color); }
+
+.stats-grid {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.stat-item h4 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 0;
+}
+
+/* --- Section 2: Values --- */
+.why-us {
+    padding: 100px 0;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    width: 60px;
+    height: 4px;
+    background: var(--primary-color);
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.values-grid {
+    display: flex;
+    gap: 30px;
+}
+
+.value-card {
+    flex: 1;
+    padding: 40px;
+    background: #fff;
+    border-radius: 15px;
+    transition: 0.4s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.value-card:hover {
+    transform: translateY(-15px);
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.value-card i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.value-card:hover i { color: #fff; }
+
+/* --- Section 3: CTA --- */
+.join-us {
+    padding: 80px 0;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070') center/cover;
+    color: #fff;
+    text-align: center;
+}
+
+.cta-btn {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cta-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(219, 48, 34, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .flex-container, .values-grid { flex-direction: column; }
+    .about-image { order: -1; }
+}

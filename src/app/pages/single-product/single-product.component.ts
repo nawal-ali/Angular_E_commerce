@@ -3,7 +3,20 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
+import { WishlistService } from '../../core/services/wishlist.service';
+import { ToasterService } from '../../shared/components/toaster/toaster.service';
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  discount: number;
+  rate: number;
+  brandName: string;
+  mainImg: string;
+  categoryName: string;
+  priceAfterDiscount?: number;
+}
 @Component({
   selector: 'app-single-product',
   standalone :true,
@@ -14,9 +27,21 @@ import { CartService } from '../../core/services/cart.service';
 export class SingleProductComponent implements OnInit {
  
   product: any; 
+  // --- Wishlist state ---
+  wishlistedIds = new Set<number>();
+  pendingWishlistIds = new Set<number>();
+   products: Product[] = [];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient ,private cartService: CartService) {}
-   
+
+  constructor(
+    private route: ActivatedRoute, 
+    private http: HttpClient ,
+    private cartService: CartService,
+      private wishlistService: WishlistService,
+      private toaster: ToasterService
+  ) {}
+
+
   selectedSize: string = 'M'; 
   selectedColor: string = '#042433';  
   
@@ -31,11 +56,13 @@ export class SingleProductComponent implements OnInit {
   selectColor(color: string) {
     this.selectedColor = color;
   }
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.getProductDetails(id);
     }
+    this.loadWishlistedIds();
   }
 
   getProductDetails(id: string) {
@@ -50,18 +77,67 @@ export class SingleProductComponent implements OnInit {
   }
   
 
-// 2. استخدامها عند الضغط على زر Add to Cart
 addToCart() {
   this.cartService.addToCart(this.product.id).subscribe({
     next: () => {
       alert('تمت الإضافة بنجاح!');
-      // نطلب من الـ API العدد الجديد ونحدث الـ Navbar
-      this.cartService.getCartItems().subscribe(items => {
+       this.cartService.getCartItems().subscribe(items => {
         this.cartService.updateCount(items.length);
       });
     }
   });
 }
 
+ loadWishlistedIds(): void {
+    this.wishlistService.getWishlist().subscribe({
+      next: (res: any) => {
+        const items = res.wishlist ?? [];
+        this.wishlistedIds = new Set(items.map((i: any) => i.productId));
+      },
+      error: () => {} // silently ignore if user not logged in
+    });
+  }
+
+  toggleWishlist(product: Product): void {
+    if (this.pendingWishlistIds.has(product.id)) return;
+
+    this.pendingWishlistIds.add(product.id);
+
+    if (this.wishlistedIds.has(product.id)) {
+      // Already wishlisted → remove
+      this.wishlistService.removeFromWishlist(product.id).subscribe({
+        next: () => {
+          this.wishlistedIds.delete(product.id);
+          this.pendingWishlistIds.delete(product.id);
+          this.toaster.show(`${product.name} removed from wishlist.`, 'info');
+        },
+        error: () => {
+          this.pendingWishlistIds.delete(product.id);
+          this.toaster.show('Could not update wishlist. Try again.', 'error');
+        }
+      });
+    } else {
+      // Not wishlisted → add
+      this.wishlistService.addToWishlist(product.id).subscribe({
+        next: () => {
+          this.wishlistedIds.add(product.id);
+          this.pendingWishlistIds.delete(product.id);
+          this.toaster.show(`${product.name} added to wishlist!`, 'success');
+        },
+        error: () => {
+          this.pendingWishlistIds.delete(product.id);
+          this.toaster.show('Could not update wishlist. Try again.', 'error');
+        }
+      });
+    }
+  }
+
+  isWishlisted(productId: number): boolean {
+    return this.wishlistedIds.has(productId);
+  }
+
+  isPendingWishlist(productId: number): boolean {
+    return this.pendingWishlistIds.has(productId);
+  }
 
   }

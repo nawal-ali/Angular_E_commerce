@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+ 
 :root {
 
   /* ===== Primary Colors ===== */
@@ -44,3 +45,4 @@
     --soft-gradient: linear-gradient(135deg, #FFF8F6, #F5E6E0);
 
 }
+ 

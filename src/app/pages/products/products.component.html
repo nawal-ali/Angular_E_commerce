@@ -61,13 +61,9 @@
               [routerLink]="['/productDetails', product.id]">
             <!-- icons during hover  -->
             <div class="product-actions d-flex flex-column gap-2 position-absolute top-0 end-0 m-3">
-              <!--  heart icon-->
-              <!-- <button class="btn btn-light btn-sm shadow-sm rounded-circle action-btn shadow">
-          <i class="bi bi-heart"></i>
-        </button> -->
+              
               <!-- Replace ONLY this button in products.component.html -->
               <!-- Find the comment: heart icon -->
-
               <!-- AFTER: -->
               <button class="btn btn-light btn-sm shadow-sm rounded-circle action-btn shadow"
                 (click)="toggleWishlist(product)" [disabled]="isPendingWishlist(product.id)"

@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { GlobalService } from '../../core/services/global.service';
 
 interface Category {
   id: number;
@@ -60,7 +61,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private wishlistService: WishlistService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private globalService: GlobalService
   ) {}
 
   ngOnInit() {
@@ -76,43 +78,126 @@ export class ProductsComponent implements OnInit, OnDestroy {
         const items = res.wishlist ?? [];
         this.wishlistedIds = new Set(items.map((i: any) => i.productId));
       },
-      error: () => {} // silently ignore if user not logged in
+      error: (err) => {
+        console.log('Error fetching wishlist:', err);
+      } 
     });
   }
 
+  // toggleWishlist(product: Product): void {
+  //   if (this.pendingWishlistIds.has(product.id)) return;
+
+  //   this.pendingWishlistIds.add(product.id);
+
+  //   if (this.wishlistedIds.has(product.id)) {
+  //     // Already wishlisted → remove
+  //     this.wishlistService.removeFromWishlist(product.id).subscribe({
+  //       next: () => {
+  //         this.wishlistedIds.delete(product.id);
+  //         this.pendingWishlistIds.delete(product.id);
+  //         this.toaster.show(`${product.name} removed from wishlist.`, 'info');
+  //       },
+  //       error: () => {
+  //         this.pendingWishlistIds.delete(product.id);
+  //         this.toaster.show('Could not update wishlist. Try again.', 'error');
+  //       }
+  //     });
+  //   } else {
+  //     // Not wishlisted → add
+  //     this.wishlistService.addToWishlist(product.id).subscribe({
+  //       next: () => {
+  //         this.wishlistedIds.add(product.id);
+  //         this.pendingWishlistIds.delete(product.id);
+  //         this.toaster.show(`${product.name} added to wishlist!`, 'success');
+  //       },
+  //       error: () => {
+  //         this.pendingWishlistIds.delete(product.id);
+  //         this.toaster.show('Could not update wishlist. Try again.', 'error');
+  //       }
+  //     });
+  //   }
+  // }
+
   toggleWishlist(product: Product): void {
-    if (this.pendingWishlistIds.has(product.id)) return;
 
-    this.pendingWishlistIds.add(product.id);
+  // CHECK LOGIN
+  if (!this.globalService.isAuthenticated()) {
 
-    if (this.wishlistedIds.has(product.id)) {
-      // Already wishlisted → remove
-      this.wishlistService.removeFromWishlist(product.id).subscribe({
-        next: () => {
-          this.wishlistedIds.delete(product.id);
-          this.pendingWishlistIds.delete(product.id);
-          this.toaster.show(`${product.name} removed from wishlist.`, 'info');
-        },
-        error: () => {
-          this.pendingWishlistIds.delete(product.id);
-          this.toaster.show('Could not update wishlist. Try again.', 'error');
-        }
-      });
-    } else {
-      // Not wishlisted → add
-      this.wishlistService.addToWishlist(product.id).subscribe({
-        next: () => {
-          this.wishlistedIds.add(product.id);
-          this.pendingWishlistIds.delete(product.id);
-          this.toaster.show(`${product.name} added to wishlist!`, 'success');
-        },
-        error: () => {
-          this.pendingWishlistIds.delete(product.id);
-          this.toaster.show('Could not update wishlist. Try again.', 'error');
-        }
-      });
-    }
+    this.toaster.show(
+      'Please login or register to save products.',
+      'info'
+    );
+
+    return;
   }
+
+  if (this.pendingWishlistIds.has(product.id)) return;
+
+  this.pendingWishlistIds.add(product.id);
+
+  if (this.wishlistedIds.has(product.id)) {
+
+    // REMOVE
+    this.wishlistService.removeFromWishlist(product.id).subscribe({
+
+      next: () => {
+
+        this.wishlistedIds.delete(product.id);
+        this.pendingWishlistIds.delete(product.id);
+
+        this.toaster.show(
+          `${product.name} removed from wishlist.`,
+          'info'
+        );
+
+      },
+
+      error: () => {
+
+        this.pendingWishlistIds.delete(product.id);
+
+        this.toaster.show(
+          'Could not update wishlist. Try again.',
+          'error'
+        );
+
+      }
+
+    });
+
+  } else {
+
+    // ADD
+    this.wishlistService.addToWishlist(product.id).subscribe({
+
+      next: () => {
+
+        this.wishlistedIds.add(product.id);
+        this.pendingWishlistIds.delete(product.id);
+
+        this.toaster.show(
+          `${product.name} added to wishlist!`,
+          'success'
+        );
+
+      },
+
+      error: () => {
+
+        this.pendingWishlistIds.delete(product.id);
+
+        this.toaster.show(
+          'Could not update wishlist. Try again.',
+          'error'
+        );
+
+      }
+
+    });
+
+  }
+
+}
 
   isWishlisted(productId: number): boolean {
     return this.wishlistedIds.has(productId);
@@ -211,15 +296,53 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.filterState = event;
   }
 
+  // addToCart(product: any) {
+  //   this.cartService.addToCart(product.id).subscribe({
+  //     next: () => {
+  //       this.toaster.show(`${product.name} added to cart!`, 'success');
+  //       this.refreshCartCount();
+  //     }
+  //   });
+  // }
+
   addToCart(product: any) {
-    this.cartService.addToCart(product.id).subscribe({
-      next: () => {
-        this.toaster.show(`${product.name} added to cart!`, 'success');
-        this.refreshCartCount();
-      }
-    });
+
+  // CHECK LOGIN
+  if (!this.globalService.isAuthenticated()) {
+
+    this.toaster.show(
+      'Please login or register to add products to cart.',
+      'info'
+    );
+
+    return;
   }
 
+  this.cartService.addToCart(product.id).subscribe({
+
+    next: () => {
+
+      this.toaster.show(
+        `${product.name} added to cart!`,
+        'success'
+      );
+
+      this.refreshCartCount();
+
+    },
+
+    error: () => {
+
+      this.toaster.show(
+        'Could not add product to cart.',
+        'error'
+      );
+
+    }
+
+  });
+
+}
   private refreshCartCount() {
     this.cartService.getCartItems().subscribe(items => {
       this.cartService.updateCount(items.length);

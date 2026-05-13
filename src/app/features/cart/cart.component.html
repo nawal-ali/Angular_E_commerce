@@ -1,63 +1,165 @@
-<div class="cart-sidebar shadow" [class.open]="isOpen">
-  <div class="p-4 d-flex flex-column h-100">
+<div class="cart-page rounded-3 ">
 
-    <div class="headOfCart d-flex justify-content-between align-items-center mb-3">
-      <p class="mb-0">Shopping Cart ({{ items.length }})</p>
+  <!-- ===== HERO ===== -->
+  <div class="cart-hero">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
 
-      <button type="button" class="btn-close" (click)="onClose()"></button>
-    </div>
+        <div>
+          <h1 class="hero-title mb-1">
+            <i class="fa-solid fa-cart-shopping me-2"></i>
+            My Cart
+          </h1>
 
-    <!-- body of cart  -->
-    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-muted"
-      *ngIf="items.length === 0">
-      <!-- // Your cart is empty  -->
-      <i class="bi bi-bag-x mb-2 fs-3 opacity-50"></i>
-      <p>Your cart is empty</p>
-    </div>
-
-    <!-- // Your cart is  not empty  -->
-
-    <div class="flex-grow-1 overflow-auto pe-2" *ngIf="items.length > 0">
-      <div class="cart-item border rounded-3 p-3 mb-3 bg-white shadow-sm" *ngFor="let item of items">
-        <div class="d-flex gap-3">
-          <img [src]="'http://shopbag.runasp.net/Images/' + item.mainImg" class="rounded-2" width="75" height="75"
-            style="object-fit: cover;">
-          <div class="flex-grow-1">
-            <div class="d-flex justify-content-between align-items-start">
-              <div>
-                <small class="text-uppercase text-muted fw-bold" style="font-size: 10px;">{{ item.brandName }}</small>
-                <h6 class="mb-1 text-dark">{{ item.name }}</h6>
-              </div>
-              <i class="bi bi-x-circle text-danger cursor-pointer" (click)="removeItem(item.id)"></i>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-0">
-              <span class="text-dark">${{ item.price }}</span>
-
-              <div class="quantity-control d-flex align-items-center border rounded-pill  px-2">
-                <button class="btn btn-sm p-1" (click)="updateQty(item, -1)"><i class="bi bi-dash"></i></button>
-                <span class="px-2 small fw-bold">{{ item.quantity }}</span>
-                <button class="btn btn-sm p-1" (click)="updateQty(item, 1)"><i class="bi bi-plus"></i></button>
-              </div>
-            </div>
-          </div>
+          <p class="hero-subtitle mb-0">
+            {{ items.length }}
+            {{ items.length === 1 ? 'item' : 'items' }}
+            in your cart
+          </p>
         </div>
+
       </div>
     </div>
+  </div>
 
+  <div class="container py-5">
 
-    <div class="mt-auto" *ngIf="items.length > 0">
-      <div class="d-flex justify-content-left mb-3">
-        <h6 class="fs-6  ">Total : </h6>
-        <h6 class="fs-6  "> {{ getTotal() }} $</h6>
+    <!-- ===== EMPTY ===== -->
+    <div *ngIf="items.length === 0" class="empty-state text-center py-5">
+
+      <div class="empty-icon-wrap mx-auto mb-4">
+        <i class="fa-solid fa-cart-shopping fa-3x"></i>
       </div>
 
-      <button class="btn btn-checkout w-100 mb-2 " [routerLink]="'/checkout'">Proceed to Checkout</button>
+      <h2 class="fw-bold mb-2">Your cart is empty</h2>
 
-      <button class="btn btn-continue w-100 
-      border-1" (click)="onClose()">Continue Shopping</button>
+      <p class="mb-4 text-secondary">
+        Looks like you haven't added anything yet.
+      </p>
+
+      <a routerLink="/product" class="btn btn-primary-custom px-4 py-2">
+        <i class="fa-solid fa-bag-shopping me-2"></i>
+        Browse Products
+      </a>
+
+    </div>
+
+    <!-- ===== CART ITEMS ===== -->
+    <div *ngIf="items.length > 0" class="row g-4 px-4">
+
+      <!-- LEFT -->
+      <div class="col-lg-8">
+
+        <div class="cart-card mb-3" *ngFor="let item of items">
+
+          <div class="row align-items-center g-3">
+
+            <!-- IMAGE -->
+            <div class="col-md-2 col-4">
+              <div class="cart-img-wrap">
+                <img [src]="'http://shopbag.runasp.net/Images/' + item.product.mainImg" class="cart-img"
+                  [alt]="item.product.name">
+              </div>
+            </div>
+
+            <!-- INFO -->
+            <div class="col-md-5 col-8">
+
+              <p class="brand-name mb-1">
+                {{ item.product.brandName }}
+              </p>
+
+              <h5 class="product-title mb-2">
+                {{ item.product.name }}
+              </h5>
+
+              <p class="product-desc text-truncate mb-0">
+                {{ item.product.description }}
+              </p>
+
+            </div>
+
+            <!-- QUANTITY -->
+            <div class="col-md-3">
+
+              <div class="quantity-box">
+
+                <button class="qty-btn" (click)="updateQty(item, -1)">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+
+                <span class="qty-count">
+                  {{ item.count }}
+                </span>
+
+                <button class="qty-btn" (click)="updateQty(item, 1)">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+
+              </div>
+
+            </div>
+
+            <!-- PRICE -->
+            <div class="col-md-2 text-md-end">
+
+              <p class="product-price mb-3">
+                ${{ item.product.price * item.count }}
+              </p>
+
+              <button class="btn-remove" (click)="removeItem(item.productId)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT SUMMARY -->
+      <div class="col-lg-4">
+
+        <div class="summary-card">
+
+          <h4 class="summary-title">
+            Order Summary
+          </h4>
+
+          <div class="summary-row">
+            <span>Items</span>
+            <span>{{ items.length }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span>Free</span>
+          </div>
+
+          <hr>
+
+          <div class="summary-row total-row">
+            <span>Total</span>
+            <span>${{ getTotal() }}</span>
+          </div>
+
+          <button class="btn btn-checkout w-100 mt-4">
+            <i class="fa-solid fa-credit-card me-2"></i>
+            Proceed to Checkout
+          </button>
+
+          <button class="btn btn-continue w-100 mt-3">
+            <a href="/product" class="text-black text-decoration-none">Continue Shopping</a>
+          </button>
+
+        </div>
+
+      </div>
+
     </div>
 
   </div>
+
 </div>
-<!-- back  -->
-<div class="cart-overlay" *ngIf="isOpen" (click)="onClose()"></div>

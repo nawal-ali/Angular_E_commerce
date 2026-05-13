@@ -9,10 +9,12 @@
 
 .wishlist-hero {
   background: var(--primary-gradient);
-  padding: 54px 0 42px;
+  padding: 54px 40px 42px;
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .wishlist-hero::before {

@@ -13,9 +13,11 @@
 
 .profile-banner {
   background: var(--primary-gradient);
-  padding: 40px 0 70px;
+  padding: 40px 40px 70px;
   position: relative;
   overflow: hidden;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .profile-banner::after {

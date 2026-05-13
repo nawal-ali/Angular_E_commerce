@@ -7,7 +7,7 @@ import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive , CartComponent] ,
+  imports: [RouterLink, RouterLinkActive] ,
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

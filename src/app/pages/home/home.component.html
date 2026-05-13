@@ -1,33 +1,51 @@
+<!-- ======================== HERO ======================== -->
 <section class="hero-wrapper overflow-hidden">
   <div class="container">
     <div class="row align-items-center min-vh-100">
-      
+
       <div class="col-lg-5 text-content">
-        <h1 class="main-title">
-            Latest Fashion<span>Trends</span>
+        <span class="hero-tag">New Collection 2026</span>
+        <h1 class="main-title mt-2">
+          Latest Fashion<br><span>Trends</span>
         </h1>
         <p class="sub-text">
-            Discover the newest styles and trends in clothing. From casual wear to formal attire, find everything you need to express your unique style.
+          Discover the newest styles and trends in clothing. From casual wear
+          to formal attire, find everything you need to express your unique style.
         </p>
-        
-        <div class="btn-group-custom">
-          <button class="btn-shop" routerLink="/product">Shop Now</button>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <button class="btn-shop" routerLink="/products">Shop Now</button>
+          <a routerLink="/products" class="hero-link">
+            <i class="fa-solid fa-play-circle me-1"></i>View All
+          </a>
+        </div>
+
+        <!-- Stats row -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-num">12K+</span>
+            <span class="stat-label">Products</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">98%</span>
+            <span class="stat-label">Happy Customers</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">50+</span>
+            <span class="stat-label">Brands</span>
+          </div>
         </div>
       </div>
 
-      
-        <div class="col-lg-7 position-relative text-center">
-    <div class="green-square-border"></div>
-    
-    <div class="model-wrapper">
-        <img src="assets/images/fashion.PNG" alt="Fashion Model" class="img-fluid main-model">
-    </div>
-
+      <div class="col-lg-7 position-relative text-center mt-5 mt-lg-0">
+        <div class="green-square-border"></div>
+        <div class="model-wrapper">
+          <img src="assets/images/fashion.PNG" alt="Fashion Model" class="img-fluid main-model">
+        </div>
         <div class="promo-bubble">
           <span class="red-text">20% Off</span> All Products
         </div>
-
-       
         <div class="floating-card design-card">
           <img src="assets/images/feed2.PNG" class="card-thumb">
           <div class="card-info">
@@ -36,7 +54,6 @@
             <p>$18.00</p>
           </div>
         </div>
-
         <div class="floating-card user-card">
           <img src="assets/images/feed1.PNG" class="card-thumb circle">
           <div class="card-info">
@@ -44,13 +61,182 @@
             <div class="stars">★★★★★</div>
           </div>
         </div>
+      </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FLASH SALE ======================== -->
+<div>
+  <app-flash-sale></app-flash-sale>
+</div>
+
+<!-- ======================== PRODUCT CAROUSEL ======================== -->
+<section class="section-carousel reveal">
+  <div class="container">
+    <div class="section-head text-center mb-5">
+      <span class="section-tag">Hand-Picked</span>
+      <h2 class="section-title">Featured Products</h2>
+      <p class="section-sub">A fresh selection of items you'll love — updated daily.</p>
+    </div>
+
+    <div class="carousel-outer" *ngIf="products.length > 0">
+      <!-- Track -->
+      <div class="carousel-track-wrap">
+        <div class="carousel-track" [style.transform]="'translateX(-' + (carouselIndex * (100 / 4)) + '%)'">
+          <div class="carousel-card" *ngFor="let product of products">
+            <div class="product-card-inner" [routerLink]="['/productDetails', product.id]">
+              <div class="pc-img-wrap">
+                <img src="http://shopbag.runasp.net/Images/{{ product.mainImg }}" [alt]="product.name" class="pc-img"
+                  onerror="this.src='assets/images/placeholder.png'" />
+                <span *ngIf="product.discount > 0" class="pc-badge">
+                  -{{ product.discount }}%
+                </span>
+              </div>
+              <div class="pc-body">
+                <p class="pc-category">{{ product.categoryName || 'Fashion' }}</p>
+                <p class="pc-name">{{ product.name }}</p>
+                <div class="pc-price-row">
+                  <span *ngIf="product.discount > 0" class="pc-old">${{ product.price | number:'1.2-2' }}</span>
+                  <span class="pc-price">${{ getDiscountedPrice(product.price, product.discount) | number:'1.2-2'
+                    }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prev / Next -->
+      <button class="carousel-btn carousel-prev" (click)="prevSlide()">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button class="carousel-btn carousel-next" (click)="nextSlide()">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+
+      <!-- Dots -->
+      <div class="carousel-dots">
+        <button *ngFor="let dot of carouselDots" class="carousel-dot" [class.active]="dot === carouselIndex"
+          (click)="goToSlide(dot)">
+        </button>
+      </div>
+    </div>
+
+    <!-- Skeleton while loading -->
+    <div class="row g-3" *ngIf="products.length === 0">
+      <div class="col-6 col-md-3" *ngFor="let s of [1,2,3,4]">
+        <div class="skeleton-pc">
+          <div class="skel-img"></div>
+          <div class="skel-line w-75 mt-3"></div>
+          <div class="skel-line w-50 mt-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a routerLink="/products" class="btn-outline-primary-custom">
+        <i class="fa-solid fa-arrow-right me-2"></i>View All Products
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FEATURES ======================== -->
+<section class="section-features reveal">
+  <div class="container">
+    <div class="section-head text-center mb-5">
+      <span class="section-tag">Why ShopBag</span>
+      <h2 class="section-title">Everything You Need</h2>
+      <p class="section-sub">We've built our store around what shoppers actually care about.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-12 col-sm-6 col-lg-3 reveal" *ngFor="let f of features; let i = index"
+        [style.animation-delay]="(i * 0.1) + 's'">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid" [ngClass]="f.icon"></i>
+          </div>
+          <h5 class="feature-title">{{ f.title }}</h5>
+          <p class="feature-desc">{{ f.desc }}</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ======================== BANNERS ======================== -->
+<section class="section-banners reveal">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-12 col-md-6" *ngFor="let banner of banners">
+        <div class="banner-card" [ngClass]="banner.color">
+          <div class="banner-content">
+            <span class="banner-tag">{{ banner.tag }}</span>
+            <h3 class="banner-title">{{ banner.title }}</h3>
+            <p class="banner-sub">{{ banner.subtitle }}</p>
+            <a routerLink="/products" class="banner-cta">
+              {{ banner.cta }}<i class="fa-solid fa-arrow-right ms-2"></i>
+            </a>
+          </div>
+          <div class="banner-icon-wrap">
+            <i class="fa-solid" [ngClass]="banner.icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<div>
-   <app-flash-sale></app-flash-sale>
-</div>
+<!-- ======================== NEWSLETTER ======================== -->
+<section class="section-newsletter reveal">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-text">
+        <h2 class="newsletter-title">Stay in the Loop</h2>
+        <p class="newsletter-sub">
+          Get the latest drops, exclusive deals, and style tips delivered straight to your inbox.
+        </p>
+      </div>
+      <div class="newsletter-form">
+        <input type="email" class="nl-input" placeholder="Your email address" />
+        <button class="nl-btn">
+          <i class="fa-solid fa-paper-plane me-2"></i>Subscribe
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FAQ ======================== -->
+<section class="section-faq reveal">
+  <div class="container">
+    <div class="row align-items-start gx-5">
+
+      <div class="col-lg-4 mb-4 mb-lg-0">
+        <span class="section-tag">Got Questions?</span>
+        <h2 class="section-title mt-2">Frequently Asked</h2>
+        <p class="section-sub">Everything you need to know about shopping with us.</p>
+        <a routerLink="/contact" class="btn-outline-primary-custom mt-3 d-inline-flex">
+          Contact Support<i class="fa-solid fa-arrow-right ms-2"></i>
+        </a>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="faq-list">
+          <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.faq-open]="faq.open">
+            <button class="faq-question" (click)="toggleFaq(i)">
+              <span>{{ faq.question }}</span>
+              <i class="fa-solid" [ngClass]="faq.open ? 'fa-minus' : 'fa-plus'"></i>
+            </button>
+            <div class="faq-answer" [class.visible]="faq.open">
+              <p>{{ faq.answer }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

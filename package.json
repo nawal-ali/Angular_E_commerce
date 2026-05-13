@@ -28,10 +28,9 @@
     "@angular-devkit/build-angular": "^19.1.6",
     "@angular/cli": "^19.1.6",
     "@angular/compiler-cli": "^19.1.0",
-<<<<<<< HEAD
-=======
+
     "@types/bootstrap": "^5.2.10",
->>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f
+
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.5.0",
     "karma": "~6.4.0",

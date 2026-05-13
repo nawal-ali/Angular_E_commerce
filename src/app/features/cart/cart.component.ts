@@ -1,47 +1,100 @@
+
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../core/services/cart.service';
+import { RouterLink } from '@angular/router';
+import { ToasterService } from '../../shared/components/toaster/toaster.service';
+
 @Component({
   selector: 'app-cart',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
-export class CartComponent implements OnInit{
+export class CartComponent implements OnInit {
+
+  items: any[] = [];
+
+  constructor(private cartService: CartService, private toaster: ToasterService) {}
+
   ngOnInit(): void {
     this.loadCart();
   }
 
-  @Input() isOpen: boolean = false;
-  @Input() items: any[] = []; 
-  @Output() closeCart = new EventEmitter<void>(); 
-  
-  constructor(private cartService: CartService) {}
-
-  onClose() {
-    this.closeCart.emit();
+  loadCart() {
+    this.cartService.getCartItems().subscribe({
+      next: (data:any) => {
+        this.items = data.cart;
+        console.log(this.items);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
   getTotal() {
-    return this.items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    return Math.round(this.items.reduce(
+      (acc, item) => acc + (item.product.price * item.count),
+      0
+    ) );
   }
- 
-  // cart-sidebar.component.ts
-loadCart() {
-  this.cartService.getCartItems().subscribe(data => this.items = data);
-}
 
-updateQty(item: any, change: number) {
+  updateQty(item: any, change: number) {
+
   if (change > 0) {
-    this.cartService.incrementQty(item.productId).subscribe(() => this.loadCart());
+
+    this.cartService.incrementQty(item.productId)
+      .subscribe(() => {
+
+        this.loadCart();
+
+        this.toaster.show(
+          `${item.product.name} quantity increased`,
+          'success'
+        );
+
+      });
+
   } else {
-    this.cartService.decrementQty(item.productId).subscribe(() => this.loadCart());
+
+    // if quantity is 1 remove item
+    if (item.count === 1) {
+
+      this.removeItem(item.productId);
+      return;
+    }
+
+    this.cartService.decrementQty(item.productId)
+      .subscribe(() => {
+
+        this.loadCart();
+
+        this.toaster.show(
+          `${item.product.name} quantity decreased`,
+          'info'
+        );
+
+      });
   }
 }
-
 removeItem(productId: number) {
-  this.cartService.removeItem(productId).subscribe(() => {
-    this.loadCart(); //           
-  });
+
+  const item = this.items.find(
+    x => x.productId === productId
+  );
+
+  this.cartService.removeItem(productId)
+    .subscribe(() => {
+
+      this.loadCart();
+
+      this.toaster.show(
+        `${item?.product?.name || 'Product'} removed from cart`,
+        'info'
+      );
+
+    });
 }
 }

@@ -32,24 +32,27 @@
         <li class="nav-item" routerLink="/whishlist">
           <a class="nav-link"><i class="bi bi-heart"></i></a>
         </li>
+        <li class="nav-item" routerLink="/cart">
+
+          <a class="nav-link"><i class="bi bi-cart2 fs-6"></i></a>
+        </li>
 
         <li class="nav-item" [routerLink]="['/profile', globalService.getUser()?.id]">
           <a class="nav-link"><i class="bi bi-person"></i></a>
         </li>
 
         <!-- // cart icon  -->
-        <div class="nav-item cursor-pointer position-relative me-4" (click)="toggleCart()">
+        <!-- <div class="nav-item cursor-pointer position-relative me-4" (click)="toggleCart()">
 
-          <i class="bi bi-cart2 fs-6"></i>
+          <i class="bi bi-cart2 fs-6" routerLink="/cart"></i>
           <span class="badge position-absolute top-0 start-100 
           translate-middle rounded-circle bg-danger" style="font-size: 0.6rem;">
             {{ cartData.length }}
           </span>
         </div>
 
-        <!-- // cart model  -->
-        <app-cart [isOpen]="isCartVisible" [items]="cartData" (closeCart)="toggleCart()">
-        </app-cart>
+        <app-cart [isOpen]="isCartVisible" (closeCart)="toggleCart()">
+        </app-cart> -->
 
 
         <button class="btn-contact d-flex align-items-center gap-2 px-4 py-2 shadow-soft" routerLink="/login"

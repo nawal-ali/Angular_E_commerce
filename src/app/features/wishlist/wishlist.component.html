@@ -1,4 +1,4 @@
-<div class="wishlist-page">
+<div class="wishlist-page rounded-3">
 
     <!-- ===== HERO ===== -->
     <div class="wishlist-hero">
@@ -53,7 +53,7 @@
         </div>
 
         <!-- ===== GRID ===== -->
-        <div *ngIf="!isLoading && wishlistItems.length > 0" class="row g-4">
+        <div *ngIf="!isLoading && wishlistItems.length > 0" class="row g-4 px-4">
             <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let item of wishlistItems">
 
                 <div class="product-card h-100 d-flex flex-column" [class.is-removing]="isRemoving(item.productId)">

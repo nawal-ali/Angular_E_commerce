@@ -9,6 +9,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SingleProductComponent } from './pages/single-product/single-product.component';
 import { WishlistComponent } from './features/wishlist/wishlist.component';
+import { CartComponent } from './features/cart/cart.component';
 
 export const routes: Routes = [
     {
@@ -23,6 +24,7 @@ export const routes: Routes = [
       { path: 'productDetails/:id', component: SingleProductComponent , title : 'Single Product Component'},
 
       {path:'profile/:id', component:ProfileComponent},
+      {path:'cart', component:CartComponent},
 
 
       { path: '', redirectTo: 'home', pathMatch: 'full' },

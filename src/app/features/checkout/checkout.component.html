@@ -1,88 +1,223 @@
-<<<<<<< HEAD
-<div class="checkout-container container my-5 py-5">
-  <div class="row g-5">
-    
-    <div class="col-lg-8">
-      <h3 class="fw-bold mb-4">Checkout</h3>
-      
-      <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
-        <div class="checkout-card p-4 mb-4 shadow-sm">
-          <h5 class="mb-4 fw-bold"><i class="bi bi-person-fill me-2"></i>Customer Information</h5>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label">First Name</label>
-              <input type="text" class="form-control custom-input" formControlName="firstName" placeholder="Enter first name">
-              <div *ngIf="f['firstName'].touched && f['firstName'].invalid" class="text-danger small mt-1">First name is required.</div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Last Name</label>
-              <input type="text" class="form-control custom-input" formControlName="lastName" placeholder="Enter last name">
-            </div>
-            <div class="col-12">
-              <label class="form-label">Delivery Address</label>
-              <textarea class="form-control custom-input" formControlName="address" rows="3" placeholder="Street, City, Building number..."></textarea>
-              <div *ngIf="f['address'].touched && f['address'].invalid" class="text-danger small mt-1">Please provide a delivery address.</div>
-            </div>
-          </div>
+<div class="checkout-container container  py-5">
+
+
+  <!-- ===== HERO ===== -->
+  <div class="cart-hero">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+
+        <div>
+          <h2 class="hero-title mb-1">
+            <i class="fa-solid fa-cart-shopping me-2"></i>
+            My Checkout
+          </h2>
+
+          <p class="hero-subtitle mb-0">
+            {{ checkoutItems.length }}
+            {{ checkoutItems.length === 1 ? 'item' : 'items' }}
+            in your checkout
+          </p>
         </div>
 
-        <div class="checkout-card p-4 shadow-sm">
-          <h5 class="mb-4 fw-bold"><i class="bi bi-credit-card-2-back-fill me-2"></i>Payment Method</h5>
-          <div class="payment-options d-flex flex-column gap-3">
-            <label class="payment-box d-flex align-items-center p-3 border rounded-3 cursor-pointer" [class.selected]="checkoutForm.get('paymentMethod')?.value === 'cod'">
-              <input type="radio" value="cod" formControlName="paymentMethod" class="me-3 custom-radio">
-              <i class="bi bi-cash-stack me-2 fs-5"></i>
-              <span>Cash on Delivery</span>
-            </label>
-            <label class="payment-box d-flex align-items-center p-3 border rounded-3 cursor-pointer" [class.selected]="checkoutForm.get('paymentMethod')?.value === 'card'">
-              <input type="radio" value="card" formControlName="paymentMethod" class="me-3 custom-radio">
-              <i class="bi bi-credit-card me-2 fs-5"></i>
-              <span>Credit / Debit Card</span>
-            </label>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div class="col-lg-4">
-      <div class="summary-card p-4 shadow sticky-top" style="top: 100px;">
-        <h5 class="fw-bold mb-4 text-center">Current Order</h5>
-        
-        <div class="order-items-list mb-4 custom-scroll">
-          <div class="item d-flex gap-3 mb-3 pb-3 border-bottom" *ngFor="let item of cartItems">
-            <img [src]="'http://shopbag.runasp.net/Images/' + item.mainImg" class="rounded-3 shadow-sm" width="70" height="70" style="object-fit: cover;">
-            <div class="flex-grow-1">
-              <h6 class="mb-0 fw-bold">{{ item.name }}</h6>
-              <p class="text-muted small mb-1">Quantity: {{ item.quantity }}</p>
-              <span class="fw-bold" style="color: #DB3022;">₹{{ item.price }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="summary-details bg-light p-3 rounded-3 mb-4">
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted">Subtotal</span>
-            <span class="fw-bold">₹{{ getSubtotal() }}</span>
-          </div>
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted">Delivery</span>
-            <span class="text-success">Free</span>
-          </div>
-          <hr>
-          <div class="d-flex justify-content-between">
-            <h5 class="fw-bold">Total</h5>
-            <h5 class="fw-bold" style="color: #DB3022;">₹{{ getSubtotal() }}</h5>
-          </div>
-        </div>
-
-        <button class="btn main-btn w-100 py-3 fw-bold rounded-pill shadow-sm" (click)="onSubmit()" [disabled]="checkoutForm.invalid">
-          PAY ₹{{ getSubtotal() }}
-        </button>
       </div>
     </div>
+  </div>
 
+  <!-- ===== body of checkout  ==== -->
+  <div class="container mt-5">
+    <div class="row g-3">
+      <div class="col-lg-8">
+
+        <!--  Switch btn (Customer Information ,Payment Details )-->
+
+        <div class="d-flex mb-4 custom-stepper">
+          <div class="step-item" [class.step-active]="currentStep === 'info'" (click)="goToStep('info')">
+            <i class="fas fa-check-circle me-2"></i> Customer Information
+          </div>
+          <div class="step-item" [class.step-active]="currentStep === 'payment'" (click)="goToStep('payment')">
+            <i class="far fa-circle me-2"></i> Payment Details
+          </div>
+        </div>
+
+        <form [formGroup]="checkoutForm">
+          <!--  ==== customer information  ====  -->
+          <div class="card p-4 border-0 shadow-sm animate__animated animate__fadeIn" *ngIf="currentStep === 'info'">
+            <h5 class=" mb-4">Check Out Your Items</h5>
+            <div class="row">
+
+              <!-- First Name -->
+              <div class="col-md-6 mb-3">
+                <label class="small">First Name</label>
+                <input formControlName="firstName" type="text" class="form-control is-invalid bg-light"
+                  [class.is-invalid]="checkoutForm.get('firstName')?.touched && checkoutForm.get('firstName')?.invalid">
+
+                <!--  === error msg ====   -->
+                <div *ngIf="checkoutForm.get('firstName')?.touched && checkoutForm.get('firstName')?.invalid"
+                  class="text-danger smaller mt-1">
+                  <span *ngIf="checkoutForm.get('firstName')?.errors?.['required']">First name is required.</span>
+                  <span *ngIf="checkoutForm.get('firstName')?.errors?.['minlength']">Must be at least 3
+                    characters.</span>
+                </div>
+              </div>
+
+              <!-- Last Name -->
+              <div class="col-md-6 mb-3">
+                <label class="small">Last Name</label>
+                <input formControlName="lastName" type="text" class="form-control is-invalid bg-light"
+                  [class.is-invalid]="checkoutForm.get('lastName')?.touched && checkoutForm.get('lastName')?.invalid">
+
+                <!--  === error msg ====   -->
+                <div *ngIf="checkoutForm.get('lastName')?.touched && checkoutForm.get('lastName')?.invalid"
+                  class="text-danger smaller mt-1">
+                  <span *ngIf="checkoutForm.get('lastName')?.errors?.['required']">Last name is required.</span>
+                  <span *ngIf="checkoutForm.get('lastName')?.errors?.['minlength']">Must be at least 3
+                    characters.</span>
+                </div>
+              </div>
+
+              <!-- -====Adress ===== -->
+              <div class="col-12 mb-4">
+                <label class="small fw-bold">Delivery Address</label>
+                <textarea formControlName="address" class="form-control bg-light"
+                  [class.is-invalid]="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid"
+                  rows="3" placeholder="e.g. 123 Main St, Apartment 4B"></textarea>
+
+                <div *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid"
+                  class="text-danger smaller mt-1">
+                  <span *ngIf="checkoutForm.get('address')?.errors?.['required']">Address is required.</span>
+                  <span *ngIf="checkoutForm.get('address')?.errors?.['pattern']">Address should contain only letters,
+                    numbers, and basic marks like ( , . - ).</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- btn next step  -->
+            <button class="btn btn-nextStep py-2 px-5 
+              rounded-pill w-auto ms-auto"
+              [disabled]="checkoutForm.get('firstName')?.invalid || checkoutForm.get('address')?.invalid"
+              (click)="goToStep('payment')">Next Step</button>
+          </div>
+
+
+
+          <!-- Payment Details -->
+          <div class="card p-4 border-0 shadow-sm animate__animated animate__fadeIn" *ngIf="currentStep === 'payment'">
+            <h5 class=" mb-4">Select Payment Method</h5>
+
+            <!-- Cash on Delivery -->
+            <div class="payment-option d-flex align-items-center justify-content-between p-3 mb-2 border rounded"
+              [class.active-radio]="paymentMethod === 'cash'" (click)="paymentMethod = 'cash'">
+              <span><i class="fas fa-money-bill-wave me-3"></i> Cash on Delivery</span>
+              <div class="radio-outer">
+                <div class="radio-inner" *ngIf="paymentMethod === 'cash'"></div>
+              </div>
+            </div>
+
+            <!-- Online Payment Form -->
+            <div class="payment-option d-flex align-items-center justify-content-between p-3 border rounded"
+              [class.active-radio]="paymentMethod === 'online'" (click)="paymentMethod = 'online'">
+              <span><i class="fab fa-cc-visa me-3"></i> Credit Card </span>
+              <div class="radio-outer">
+                <div class="radio-inner" *ngIf="paymentMethod === 'online'"></div>
+              </div>
+            </div>
+
+            <!--  Cart field  -->
+            <div *ngIf="paymentMethod === 'online'" class="mt-4 p-3 bg-light rounded shadow-inner">
+              <label class="small fw-bold  fs-6 mb-2">Card Number</label>
+
+              <input formControlName="cardNumber" type="text" class="form-control mb-1 "
+                placeholder="16 digits card number">
+
+              <!-- Error Message  -->
+              <div *ngIf="checkoutForm.get('cardNumber')?.touched && checkoutForm.get('cardNumber')?.invalid"
+                class="text-danger smaller">
+                <span *ngIf="checkoutForm.get('cardNumber')?.errors?.['pattern']">Please enter a valid 16-digit card
+                  number.</span>
+              </div>
+
+              <div class="row mt-2">
+                <div class="col-6">
+                  <input formControlName="expiry" type="text" class="form-control  " placeholder="MM/YY">
+                  <div *ngIf="checkoutForm.get('expiry')?.touched && checkoutForm.get('expiry')?.invalid"
+                    class="text-danger smaller">
+                    Invalid date (MM/YY).
+                  </div>
+
+                </div>
+
+                <div class="col-6">
+                  <input formControlName="cvv" type="text" class="form-control" placeholder="CVV">
+                  <div *ngIf="checkoutForm.get('cvv')?.touched && checkoutForm.get('cvv')?.invalid"
+                    class="text-danger smaller">
+                    Must be 3 digits.
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- Btn Back -->
+            <button class="btn btn-back mt-4 me-2 rounded-pill" (click)="goToStep('info')">Back</button>
+          </div>
+
+
+        </form>
+      </div>
+
+
+
+      <!--  ========== Order Summary ===========-->
+      <div class="col-lg-4 Summary">
+        <div class="card border-0 shadow-sm p-4 sticky-top" style="top: 20px;">
+          <h5 class=" mb-4">Current Order</h5>
+
+          <div class="order-scroll pe-2" style="max-height: 350px; overflow-y: auto;">
+            <div *ngFor="let item of checkoutItems" class="d-flex align-items-center mb-3">
+              <div class="d-flex align-items-center checkout-card w-100">
+                <!-- image  -->
+                <img [src]="'http://shopbag.runasp.net/Images/' + item.product.mainImg" class="rounded"
+                  width="60" height="60" style="object-fit: cover;">
+
+                <!-- body  -->
+                <div class="ms-3 flex-grow-1">
+                  <p class="size mb-0 fw-bold small text-truncate" >{{item.product.name}}</p>
+                  <span class="size text-muted small">Quantity: {{item.count}}</span>
+                </div>
+                <span class="size fw-bold small">${{item.product.price * item.count}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-top mt-3 pt-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Subtotal</span>
+              <span class="fw-bold">${{calcTotal()}}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-4">
+              <span class="text-muted">Delivery</span>
+              <span class="text-success fw-bold">Free</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <span class="h5 fw-bold mb-0">Total</span>
+              <span class="h4  mb-0 text-success">${{calcTotal()}}</span>
+            </div>
+            <button class="btn btn-confirm w-100 py-2 rounded-pill" 
+            (click)="confirmOrder()"
+            >Confirm Order</button>
+
+            <app-confirm-order 
+              [isVisible]="showSuccessModal" 
+              [totalPrice]="calcTotal()" 
+              [paymentMethod]="paymentMethod"
+              [cardLastFour]="getLastFourDigits()"
+              (close)="showSuccessModal = false"
+              (confirm)="handleFinalPayment()">
+              >
+            </app-confirm-order>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-=======
-<p>checkout works!</p>
->>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f

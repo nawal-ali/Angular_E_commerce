@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
+ 
   private baseUrl ='http://shopbag.runasp.net/api/Customer/Carts';
   
    
@@ -41,4 +42,9 @@ export class CartService {
   updateCount(count: number) {
     this.cartCount.next(count);
   }
+  
+  placeOrder(orderData: any): Observable<any> {
+   return this.http.post(`http://shopbag.runasp.net/api/Admin/OrderItems`, orderData);
+}
+ 
 }

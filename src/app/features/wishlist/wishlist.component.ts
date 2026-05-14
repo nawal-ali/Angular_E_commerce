@@ -1,14 +1,4 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-wishlist',
-//   imports: [],
-//   templateUrl: './wishlist.component.html',
-//   styleUrl: './wishlist.component.css'
-// })
-// export class WishlistComponent {
-
-// }
+ 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';

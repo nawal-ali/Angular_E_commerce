@@ -1,0 +1,511 @@
+<div class="admin-page container py-4">
+    <div class="row gx-4">
+
+        <!-- Sidebar -->
+        <div class="col-12 col-lg-3 mb-4">
+            <div class="profile-sidebar card">
+                <div class="profile-sidebar__header">
+                    <div class="profile-avatar">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </div>
+                    <div>
+                        <h3>Admin Panel</h3>
+                        <p>Manage your store</p>
+                    </div>
+                </div>
+                <div class="profile-menu">
+                    <div class="profile-menu__title">Navigation</div>
+                    <nav>
+                        <button type="button" *ngFor="let item of menuItems" class="profile-menu__item"
+                            [class.active]="selectedTab === item.key" (click)="selectTab(item.key)">
+                            <i class="fa-solid" [ngClass]="item.icon"></i>
+                            <span>{{ item.label }}</span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-12 col-lg-9">
+            <div class="profile-content card">
+
+                <div class="profile-content__header d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <h2>
+                            <span *ngIf="selectedTab === 'users'">Users Management</span>
+                            <span *ngIf="selectedTab === 'products'">Products Management</span>
+                            <span *ngIf="selectedTab === 'brands'">Brands Management</span>
+                            <span *ngIf="selectedTab === 'categories'">Categories Management</span>
+                            <span *ngIf="selectedTab === 'statistics'">System Statistics</span>
+                        </h2>
+                        <p class="text-muted mb-0">Manage your store data and settings.</p>
+                    </div>
+                    <div *ngIf="!showForm">
+                        <button *ngIf="selectedTab === 'products'" class="primary-btn" (click)="openAddProduct()">
+                            <i class="fa-solid fa-plus"></i> Add Product
+                        </button>
+                        <button *ngIf="selectedTab === 'brands'" class="primary-btn" (click)="openAddBrand()">
+                            <i class="fa-solid fa-plus"></i> Add Brand
+                        </button>
+                        <button *ngIf="selectedTab === 'categories'" class="primary-btn" (click)="openAddCategory()">
+                            <i class="fa-solid fa-plus"></i> Add Category
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="isLoading" class="profile-loading">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Loading data...</span>
+                </div>
+
+                <!-- USERS TAB -->
+                <section *ngIf="selectedTab === 'users' && !isLoading">
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="users.length === 0">
+                                    <td colspan="6" class="text-center text-muted py-4">No users found.</td>
+                                </tr>
+                                <tr *ngFor="let user of users; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ user.name }}</td>
+                                    <td class="text-muted">{{ user.userName }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.phoneNumber || '—' }}</td>
+                                    <td>
+                                        <button class="action-btn action-btn--warn" (click)="toggleUserLock(user)">
+                                            <i class="fa-solid fa-lock-open"></i> Toggle Lock
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- PRODUCTS TAB -->
+                <section *ngIf="selectedTab === 'products' && !isLoading">
+                    <div *ngIf="showForm" class="admin-form-panel">
+                        <div class="admin-form-panel__header">
+                            <h4>{{ editingId ? 'Edit Product' : 'Add New Product' }}</h4>
+                            <button class="icon-btn" (click)="cancelForm()"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="profile-form">
+                            <div class="form-grid-2">
+                                <div class="form-row">
+                                    <label>Product Name <span class="required">*</span></label>
+                                    <input type="text" [(ngModel)]="productForm.name" name="prodName"
+                                        placeholder="Product name" />
+                                </div>
+                                <div class="form-row">
+                                    <label>Price ($) <span class="required">*</span></label>
+                                    <input type="number" [(ngModel)]="productForm.price" name="prodPrice" min="0"
+                                        placeholder="0.00" />
+                                </div>
+                                <div class="form-row">
+                                    <label>Quantity</label>
+                                    <input type="number" [(ngModel)]="productForm.quantity" name="prodQty" min="0"
+                                        placeholder="1" />
+                                </div>
+                                <div class="form-row">
+                                    <label>Discount (%)</label>
+                                    <input type="number" [(ngModel)]="productForm.discount" name="prodDiscount" min="0"
+                                        max="100" placeholder="0" />
+                                </div>
+                                <div class="form-row">
+                                    <label>Category <span class="required">*</span></label>
+                                    <select [(ngModel)]="productForm.categoryId" name="prodCat">
+                                        <option [value]="0">— Select category —</option>
+                                        <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <label>Brand <span class="required">*</span></label>
+                                    <select [(ngModel)]="productForm.brandId" name="prodBrand">
+                                        <option [value]="0">— Select brand —</option>
+                                        <option *ngFor="let b of brands" [value]="b.id">{{ b.name }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-row full-width">
+                                    <label>Description</label>
+                                    <textarea [(ngModel)]="productForm.description" name="prodDesc" rows="3"
+                                        placeholder="Product description..."></textarea>
+                                </div>
+                                <div class="form-row">
+                                    <label>Product Image {{ editingId ? '(leave empty to keep current)' : '*' }}</label>
+                                    <input type="file" (change)="onProductImageSelected($event)" name="prodImg"
+                                        accept="image/*" class="file-input" />
+                                </div>
+                                <div class="form-row">
+                                    <label>Status</label>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" [(ngModel)]="productForm.status" name="prodStatus" />
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">{{ productForm.status ? 'Active' : 'Inactive'
+                                            }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div *ngIf="productImagePreview || (editingId && editingProductMainImg)"
+                                class="img-preview-wrap">
+                                <img [src]="productImagePreview || (imageBase + editingProductMainImg)" alt="Preview"
+                                    class="img-preview"
+                                    (error)="$any($event.target).src='assets/images/placeholder.png'" />
+                            </div>
+                            <div class="form-actions">
+                                <button class="primary-btn" (click)="saveProduct()" [disabled]="isSaving">
+                                    <i class="fa-solid"
+                                        [ngClass]="isSaving ? 'fa-spinner fa-spin' : 'fa-floppy-disk'"></i>
+                                    {{ isSaving ? 'Saving...' : (editingId ? 'Update Product' : 'Create Product') }}
+                                </button>
+                                <button class="secondary-btn" (click)="cancelForm()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!showForm" class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Discount</th>
+                                    <th>Category</th>
+                                    <th>Brand</th>
+                                    <th>Qty</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="products.length === 0">
+                                    <td colspan="9" class="text-center text-muted py-4">No products found.</td>
+                                </tr>
+                                <tr *ngFor="let p of products; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>
+                                        <img [src]="imageBase + p.mainImg" class="product-thumb"
+                                            (error)="$any($event.target).src='assets/images/placeholder.png'"
+                                            alt="{{ p.name }}" />
+                                    </td>
+                                    <td class="fw-semibold">{{ p.name }}</td>
+                                    <td>${{ p.price | number:'1.2-2' }}</td>
+                                    <td>{{ p.discount }}%</td>
+                                    <td>{{ p.categoryName || '—' }}</td>
+                                    <td>{{ p.brandName || '—' }}</td>
+                                    <td>{{ p.quantity }}</td>
+                                    <td class="actions-cell">
+                                        <button class="action-btn action-btn--edit" (click)="openEditProduct(p)">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
+                                        <button class="action-btn action-btn--danger" (click)="deleteProduct(p)">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- BRANDS TAB -->
+                <section *ngIf="selectedTab === 'brands' && !isLoading">
+                    <div *ngIf="showForm" class="admin-form-panel">
+                        <div class="admin-form-panel__header">
+                            <h4>{{ editingId ? 'Edit Brand' : 'Add New Brand' }}</h4>
+                            <button class="icon-btn" (click)="cancelForm()"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="profile-form">
+                            <div class="form-grid-2">
+                                <div class="form-row">
+                                    <label>Brand Name <span class="required">*</span> <small class="text-muted">(3–10
+                                            chars)</small></label>
+                                    <input type="text" [(ngModel)]="brandForm.name" name="brandName"
+                                        placeholder="Brand name" minlength="3" maxlength="10" />
+                                </div>
+                                <div class="form-row">
+                                    <label>Status</label>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" [(ngModel)]="brandForm.status" name="brandStatus" />
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">{{ brandForm.status ? 'Active' : 'Inactive' }}</span>
+                                    </label>
+                                </div>
+                                <div class="form-row full-width">
+                                    <label>Description</label>
+                                    <textarea [(ngModel)]="brandForm.description" name="brandDesc" rows="3"
+                                        placeholder="Brand description..."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="primary-btn" (click)="saveBrand()" [disabled]="isSaving">
+                                    <i class="fa-solid"
+                                        [ngClass]="isSaving ? 'fa-spinner fa-spin' : 'fa-floppy-disk'"></i>
+                                    {{ isSaving ? 'Saving...' : (editingId ? 'Update Brand' : 'Create Brand') }}
+                                </button>
+                                <button class="secondary-btn" (click)="cancelForm()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!showForm" class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Products</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="brands.length === 0">
+                                    <td colspan="6" class="text-center text-muted py-4">No brands found.</td>
+                                </tr>
+                                <tr *ngFor="let b of brands; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td class="fw-semibold">{{ b.name }}</td>
+                                    <td class="text-muted text-truncate-cell">{{ b.description || '—' }}</td>
+                                    <td>
+                                        <span class="status-badge" [class.active]="b.status"
+                                            [class.inactive]="!b.status">
+                                            {{ b.status ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="count-badge">{{ brandProductCount(b.name) }}</span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="action-btn action-btn--edit" (click)="openEditBrand(b)">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
+                                        <button class="action-btn action-btn--danger" (click)="confirmDeleteBrand(b)">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- CATEGORIES TAB -->
+                <section *ngIf="selectedTab === 'categories' && !isLoading">
+                    <div *ngIf="showForm" class="admin-form-panel">
+                        <div class="admin-form-panel__header">
+                            <h4>{{ editingId ? 'Edit Category' : 'Add New Category' }}</h4>
+                            <button class="icon-btn" (click)="cancelForm()"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="profile-form">
+                            <div class="form-grid-2">
+                                <div class="form-row">
+                                    <label>Category Name <span class="required">*</span></label>
+                                    <input type="text" [(ngModel)]="categoryForm.name" name="catName"
+                                        placeholder="Category name" minlength="3" maxlength="100" />
+                                </div>
+                                <div class="form-row">
+                                    <label>Status</label>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" [(ngModel)]="categoryForm.status" name="catStatus" />
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">{{ categoryForm.status ? 'Active' : 'Inactive'
+                                            }}</span>
+                                    </label>
+                                </div>
+                                <div class="form-row full-width">
+                                    <label>Description</label>
+                                    <textarea [(ngModel)]="categoryForm.description" name="catDesc" rows="3"
+                                        placeholder="Category description..."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="primary-btn" (click)="saveCategory()" [disabled]="isSaving">
+                                    <i class="fa-solid"
+                                        [ngClass]="isSaving ? 'fa-spinner fa-spin' : 'fa-floppy-disk'"></i>
+                                    {{ isSaving ? 'Saving...' : (editingId ? 'Update Category' : 'Create Category') }}
+                                </button>
+                                <button class="secondary-btn" (click)="cancelForm()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!showForm" class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Products</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="categories.length === 0">
+                                    <td colspan="6" class="text-center text-muted py-4">No categories found.</td>
+                                </tr>
+                                <tr *ngFor="let c of categories; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td class="fw-semibold">{{ c.name }}</td>
+                                    <td class="text-muted text-truncate-cell">{{ c.description || '—' }}</td>
+                                    <td>
+                                        <span class="status-badge" [class.active]="c.status"
+                                            [class.inactive]="!c.status">
+                                            {{ c.status ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="count-badge">{{ categoryProductCount(c.name) }}</span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="action-btn action-btn--edit" (click)="openEditCategory(c)">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
+                                        <button class="action-btn action-btn--danger"
+                                            (click)="confirmDeleteCategory(c)">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- STATISTICS TAB -->
+                <section *ngIf="selectedTab === 'statistics' && !isLoading">
+                    <div class="stats-grid">
+                        <div class="stat-card stat-card--users">
+                            <div class="stat-card__icon"><i class="fa-solid fa-users"></i></div>
+                            <div class="stat-card__body">
+                                <span class="stat-card__value">{{ users.length }}</span>
+                                <span class="stat-card__label">Total Users</span>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--products">
+                            <div class="stat-card__icon"><i class="fa-solid fa-box"></i></div>
+                            <div class="stat-card__body">
+                                <span class="stat-card__value">{{ products.length }}</span>
+                                <span class="stat-card__label">Total Products</span>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--brands">
+                            <div class="stat-card__icon"><i class="fa-solid fa-tag"></i></div>
+                            <div class="stat-card__body">
+                                <span class="stat-card__value">{{ brands.length }}</span>
+                                <span class="stat-card__label">Total Brands</span>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--categories">
+                            <div class="stat-card__icon"><i class="fa-solid fa-layer-group"></i></div>
+                            <div class="stat-card__body">
+                                <span class="stat-card__value">{{ categories.length }}</span>
+                                <span class="stat-card__label">Total Categories</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-section mt-4" *ngIf="stats.length > 0">
+                        <h5 class="stats-section__title">
+                            <i class="fa-solid fa-chart-simple"></i> Products by Category
+                        </h5>
+                        <div class="admin-table-wrapper mt-3">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Products</th>
+                                        <th>Avg Price</th>
+                                        <th>Total Revenue</th>
+                                        <th>Distribution</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let s of stats">
+                                        <td class="fw-semibold">{{ s.key }}</td>
+                                        <td><span class="count-badge">{{ s.count }}</span></td>
+                                        <td>{{ s.avg }}</td>
+                                        <td>{{ s.sum }}</td>
+                                        <td class="w-25">
+                                            <div class="dist-bar-bg">
+                                                <div class="dist-bar-fill"
+                                                    [style.width.%]="(s.count / maxProductCount) * 100"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div *ngIf="stats.length === 0" class="text-center text-muted py-4">
+                        No statistics data available yet.
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE WARNING MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true" #deleteModal>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content delete-modal">
+
+            <div class="modal-header delete-modal__header">
+                <h5 class="modal-title">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> Confirm Delete
+                </h5>
+                <button type="button" class="btn-close btn-close-white" (click)="closeDeleteModal()"></button>
+            </div>
+
+            <div class="modal-body" *ngIf="pendingDelete">
+                <p class="delete-modal__name">
+                    You are about to delete: <strong>{{ pendingDelete.name }}</strong>
+                </p>
+
+                <div *ngIf="pendingDelete.linkedCount > 0" class="delete-modal__warning">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <div>
+                        <strong>Warning:</strong> This {{ pendingDelete.type }} has
+                        <span class="linked-count">{{ pendingDelete.linkedCount }} {{ pendingDelete.linkedCount === 1 ?
+                            'product' : 'products' }}</span> linked to it.
+                        <br />
+                        Deleting this {{ pendingDelete.type }} will <strong>also permanently delete all {{
+                            pendingDelete.linkedCount }} linked {{ pendingDelete.linkedCount === 1 ? 'product' :
+                            'products' }}</strong>.
+                    </div>
+                </div>
+
+                <p class="delete-modal__confirm-text" *ngIf="pendingDelete.linkedCount === 0">
+                    This action cannot be undone.
+                </p>
+            </div>
+
+            <div class="modal-footer delete-modal__footer">
+                <button type="button" class="secondary-btn" (click)="closeDeleteModal()">Cancel</button>
+                <button type="button" class="danger-btn" (click)="executeDelete()">
+                    <i class="fa-solid fa-trash"></i>
+                    {{ pendingDelete && pendingDelete.linkedCount > 0 ? 'Delete & Remove Products' : 'Delete' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -19,48 +19,40 @@ export class NavbarComponent implements OnInit {
   constructor(
     public globalService: GlobalService,
     private toaster: ToasterService,
-    private cartService: CartService
+    private cartService: CartService,
   ) {}
 
   ngOnInit(): void {
-
-    // listen for cart count changes
     this.cartService.cartCount$.subscribe((count: number) => {
       this.cartCount = count;
     });
-
-    // initial cart load
     this.loadCartCount();
   }
 
   loadCartCount() {
-
     this.cartService.getCartItems().subscribe({
       next: (res: any) => {
-
-        // if API returns { cart: [...] }
         const count = res.cart?.length || 0;
-
         this.cartService.updateCount(count);
       },
-
       error: (err) => {
         console.error(err);
       }
     });
-
   }
 
   handleLogout() {
-
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
-
-    this.toaster.show(
-      'Logged out successfully',
-      'success'
-    );
-
+    this.toaster.show('Logged out successfully', 'success');
   }
 
+  // Closes mobile collapse layout seamlessly during client routing transitions
+  closeNav(navMenu: HTMLElement) {
+    console.log(navMenu);
+    // if (navMenu.classList.contains('show')) {
+    //   navMenu.classList.remove('show');
+    // }
+    navMenu.classList.toggle('show');
+  }
 }

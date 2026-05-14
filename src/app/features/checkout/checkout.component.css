@@ -2,61 +2,120 @@
   --primary-color: #DB3022;
 }
 
-.checkout-card, .summary-card {
-  background: white;
-  border-radius: 20px;
-  border: 1px solid rgba(0,0,0,0.05);
+.checkout-container{
+   animation: fadeInUp 0.55s ease-out both;
+  background:
+    radial-gradient(circle at top left,
+      rgba(255,255,255,0.48),
+      transparent 26%),
+    linear-gradient(180deg,
+      #f8fbff 0%,
+      #eef4ff 100%);
+  min-height: 100vh;
+}
+/* HERO */
+
+.cart-hero {
+  background: var(--primary-color);
+  padding: 54px 40px 42px;
+  position: relative;
+  overflow: hidden;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
-/* زر الدفع الأساسي */
-.main-btn {
-  background-color: var(--primary-color);
+.cart-hero::after {
+  content: '\f07a';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 150px;
+  color: rgba(255,255,255,0.08);
+}
+
+.hero-title {
+  font-size: 1.7rem;
+  font-weight: 800;
   color: white;
-  border: none;
-  transition: all 0.3s ease;
 }
 
-.main-btn:hover:not(:disabled) {
-  background-color: #b0261b;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(219, 48, 34, 0.3);
+.hero-subtitle {
+  color: rgba(255,255,255,0.7);
 }
-
-.main-btn:disabled {
-  background-color: #cccccc;
-}
-
-.custom-input {
-  border-radius: 10px;
-  padding: 12px;
-  border: 1.5px solid #eee;
-  transition: border-color 0.3s;
-}
-
-.custom-input:focus {
-  border-color: var(--primary-color);
-  box-shadow: none;
-}
-
-/* اختيارات الدفع */
-.payment-box {
-  transition: all 0.2s ease;
-}
-
-.payment-box.selected {
-  border-color: var(--primary-color) !important;
-  background-color: rgba(219, 48, 34, 0.05);
-}
-
-.custom-radio {
-  accent-color: var(--primary-color);
-}
-
-.custom-scroll {
-  max-height: 300px;
-  overflow-y: auto;
-}
+.step-item { 
+  cursor: pointer;
+   padding: 8px 20px; 
+   color: #aaa; 
+   font-size: 1rem;
+   border-bottom: 1px solid transparent; 
+   transition: 0.1s; 
+  }
  
-.item img {
-  border: 1px solid #eee;
+
+.step-active{ 
+  color: var(--primary-color); 
+  font-weight: 500; 
+  border-bottom:2px solid var(--primary-color); 
+}
+
+.btn-nextStep, .btn-back ,.btn-confirm{
+  background-color: var(--primary-color);
+  border: none !important;
+  color: white !important;
+}
+.btn-nextStep:hover, .btn-back:hover, .btn-confirm:hover{
+  opacity: 0.9;
+}
+
+
+/* Radio Button Styles */
+
+.payment-option { 
+  cursor: pointer; 
+  border: 1.5px solid #eee !important;
+   transition: 0.2s; 
+  }
+
+
+.active-radio { 
+  border-color: var(--primary-color) !important;
+   background-color: #fcfcfc;
+   }
+
+.radio-outer { 
+  width: 20px; 
+  height: 20px; 
+  border: 2px solid #ccc;
+   border-radius: 50%; 
+   display: flex; align-items: center; 
+   justify-content: center; }
+
+.active-radio .radio-outer {
+   border-color: var(--primary-color);
+   }
+.radio-inner {
+   width: 10px; height: 10px;
+    background: var(--primary-color);
+   border-radius: 50%; }
+
+/* Validation styles */
+.is-invalid { border: 1px solid red !important; }
+.animate__fadeIn { animation-duration: 0.5s; }
+
+ 
+.checkout-card {
+ 
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.05);
+  padding: 10px;
+} 
+.size{
+  font-size: 13px;
+}
+
+.Summary{
+  z-index: 1 ;
 }

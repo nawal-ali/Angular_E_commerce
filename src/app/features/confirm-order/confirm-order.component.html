@@ -1,0 +1,50 @@
+<!-- Success Modal -->
+
+<div class="glass-overlay animate__animated animate__fadeIn" *ngIf="isVisible">
+  <div class="custom-modal animate__animated animate__zoomIn">
+    <div class="modal-header-custom">
+      <span class="order-label">
+        <strong>Order ID #{{ orderId }}</strong>
+      </span>
+    </div>
+
+    <div class="modal-body-custom">
+      <div class="payment-icon">
+        <i class="fas fa-wallet"></i>
+        <span class="h5"> Payment</span>
+      </div>
+      <p class="instruction">Please Pay The Amount Down Below To Continue Your Order</p>
+
+      <div class="price-details">
+        <div class="detail-row text-total">
+          <div class="total-col">
+             <span class="total-label">Total price</span>
+             <h2 class="total-amount">{{ totalPrice }} <small>EGP</small></h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-section">
+        <span class="method-title">Payment Method</span>
+        <div class="method-badge">
+           <i class="fas fa-wallet me-2"></i> {{ paymentMethod === 'online' ? 'Credit Card' : 'Cash' }} <br >
+          <small *ngIf="paymentMethod === 'online'" class="text-50">
+        **** {{ cardLastFour }}
+      </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer-custom">
+      <button class="btn-cancel" (click)="onCancel()">
+        <i class="fas fa-times me-1"></i> Cancel
+      </button>
+
+      <div class="divider">|</div>
+      
+     <button class="btn-pay" (click)="onPay()">
+      <i class="fas fa-check-circle me-1"></i> Pay
+    </button>
+    </div>
+  </div>
+</div>

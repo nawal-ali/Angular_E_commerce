@@ -10,6 +10,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { SingleProductComponent } from './pages/single-product/single-product.component';
 import { WishlistComponent } from './features/wishlist/wishlist.component';
 import { CartComponent } from './features/cart/cart.component';
+import { CheckoutComponent } from './features/checkout/checkout.component';
 
 export const routes: Routes = [
     {
@@ -21,14 +22,12 @@ export const routes: Routes = [
       { path: 'contact', component: ContactComponent , title : 'Contact'},
       { path: 'about', component: AboutComponent , title : 'About'},
       { path: 'whishlist', component: WishlistComponent , title : 'Wishlist'},
+      { path: 'checkout', component: CheckoutComponent , title : 'Checkout'},
       { path: 'productDetails/:id', component: SingleProductComponent , title : 'Single Product Component'},
-
       {path:'profile/:id', component:ProfileComponent},
-      {path:'cart', component:CartComponent},
-
+      {path:'cart', component:CartComponent , title : 'Cart'},
 
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-
       
     ]
   },

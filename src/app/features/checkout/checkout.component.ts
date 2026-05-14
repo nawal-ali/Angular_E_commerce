@@ -1,67 +1,119 @@
-<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CartService } from '../../core/services/cart.service';
+import { CartService } from '../../core/services/cart.service';   
 
+import { ReactiveFormsModule,FormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { ConfirmOrderComponent } from '../confirm-order/confirm-order.component';
+import { ToasterService } from '../../shared/components/toaster/toaster.service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule ,ReactiveFormsModule,ConfirmOrderComponent],
   templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.css'
+  styleUrls: ['./checkout.component.css']
 })
 export class CheckoutComponent implements OnInit {
-  checkoutForm!: FormGroup;
-  cartItems: any[] = [];
+   checkoutItems: any[] = [];
+  paymentMethod: string = 'online'; 
+  currentStep: string = 'info'; 
+  showThankYouModal: boolean = false;
+ 
+checkoutForm = new FormGroup({
 
-  constructor(private fb: FormBuilder, private cartService: CartService) {}
+    firstName: new FormControl('',
+       [Validators.required,
+       Validators.minLength(3)]),
+
+    lastName: new FormControl('', [
+        Validators.required ,
+       Validators.minLength(3)] ,),
+
+    address: new FormControl('', 
+      [Validators.required , 
+       Validators.pattern(/^[a-zA-Z0-9\s,.-]*$/),]),
+
+
+    cardNumber: new FormControl('', 
+      [Validators.pattern('^[0-9]{16}$')]),
+
+    expiry: new FormControl('',
+       [Validators.pattern('^(0[1-9]|1[0-2])\/?([0-9]{2})$')]),
+
+    cvv: new FormControl('', [Validators.pattern('^[0-9]{3}$')])
+
+  });
+  constructor(
+    private _cartService: CartService ,
+    private toaster: ToasterService 
+  ) {}
 
   ngOnInit(): void {
-    // 1. بناء الفورم مع الـ Validation
-    this.checkoutForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(3)]],
-      lastName: ['', [Validators.required]],
-      address: ['', [Validators.required]],
-      paymentMethod: ['cod', Validators.required]
-    });
+    this.getCheckoutData();
+  }
 
-    // 2. جلب المنتجات بشكل dynamic
-    this.cartService.getCartItems().subscribe(items => {
-      this.cartItems = items;
+  getCheckoutData() {
+     this._cartService.getCartItems().subscribe({
+      next: (data: any) => {
+         this.checkoutItems = data.cart;
+      },
+      error: (err) => console.error('Checkout error:', err)
     });
   }
 
-  // اختصار للوصول للحقول في الـ HTML
-  get f() { return this.checkoutForm.controls; }
-
-  getSubtotal() {
-    return this.cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+   calcTotal(): number {
+    return Math.round(this.checkoutItems.reduce(
+      (acc, item) => acc + (item.product.price * item.count),
+      0
+    ));
   }
 
-  onSubmit() {
-    if (this.checkoutForm.valid) {
-      console.log('Order Submitted Successfully:', this.checkoutForm.value);
-      alert('Congratulations! Your order has been placed.');
-      // هنا ممكن تنادي على API الدفع اللي في الصورة السابقة (Pay)
-    } else {
-      Object.keys(this.checkoutForm.controls).forEach(field => {
-        const control = this.checkoutForm.get(field);
-        control?.markAsTouched({ onlySelf: true });
-      });
+  selectPayment(method: string) {
+    this.paymentMethod = method;
+  }
+
+  goToStep(step: string) {
+    this.currentStep = step;
+  }
+
+  showSuccessModal: boolean = false; 
+
+confirmOrder() {
+   if (this.checkoutForm.valid || this.paymentMethod === 'cash') {
+    console.log("Order Confirmed!", this.checkoutForm.value);
+    
+     this.showSuccessModal = true; 
+  } else {
+    this.checkoutForm.markAllAsTouched();
+  }
+}
+
+//  card number last 4 digits
+getLastFourDigits(): string {
+  const cardNumber = this.checkoutForm.get('cardNumber')?.value;
+  if (cardNumber && cardNumber.length >= 4) {
+     return cardNumber.slice(-4);
+  }
+  return '****';   
+}
+
+handleFinalPayment() {
+  const finalOrder = {
+    user: this.checkoutForm.value,
+    totalPrice: this.calcTotal(),
+    paymentMethod: this.paymentMethod
+  };
+
+  this._cartService.placeOrder(finalOrder).subscribe({
+    next: (response) => {
+      console.log('Order saved in API:', response);
+      this.toaster.show('Order Saved & Confirmed Successfully!', 'success');
+     
+       
+    },
+    error: (err) => {
+      this.toaster.show('Failed to place order.', 'error');
+      console.error(err);
     }
-  }
+  });
 }
-=======
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-checkout',
-  imports: [],
-  templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.css'
-})
-export class CheckoutComponent {
-
 }
->>>>>>> 908029f71f57c24858f14ed02f2eeb35a088aa2f

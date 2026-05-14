@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import {  OnInit } from '@angular/core';
-import * as AOS from 'aos' ; 
+import * as AOS from 'aos' ;
+import { RouterLink } from "@angular/router"; 
 @Component({
   selector: 'app-about',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './about.component.html',
   styleUrl: './about.component.css'
 })

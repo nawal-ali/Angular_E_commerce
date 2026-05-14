@@ -10,6 +10,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { SingleProductComponent } from './pages/single-product/single-product.component';
 import { WishlistComponent } from './features/wishlist/wishlist.component';
 import { CartComponent } from './features/cart/cart.component';
+import { AdminDashboardComponent } from './features/admin-dashboard/admin-dashboard.component';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
     {
@@ -22,7 +24,12 @@ export const routes: Routes = [
       { path: 'about', component: AboutComponent , title : 'About'},
       { path: 'whishlist', component: WishlistComponent , title : 'Wishlist'},
       { path: 'productDetails/:id', component: SingleProductComponent , title : 'Single Product Component'},
-
+      {
+        path: 'admin-dashboard',
+        component: AdminDashboardComponent,
+        title: 'Admin Dashboard',
+        canActivate: [adminGuard]
+      },
       {path:'profile/:id', component:ProfileComponent},
       {path:'cart', component:CartComponent},
 

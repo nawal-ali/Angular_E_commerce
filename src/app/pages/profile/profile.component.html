@@ -318,8 +318,8 @@
 
                 <div *ngIf="!isLoadingItems && selectedOrder.items.length > 0" class="order-items-list">
                     <div class="order-item-row" *ngFor="let item of selectedOrder.items">
-                        <img *ngIf="item.productImg" [src]="item.productImg" [alt]="item.productName"
-                            class="order-item-img" />
+                        <img *ngIf="item.productImg" [src]="'http://shopbag.runasp.net/Images/'+item.productImg"
+                            [alt]="item.productName" class="order-item-img" />
                         <div *ngIf="!item.productImg" class="order-item-img-placeholder">
                             <i class="fa-solid fa-image"></i>
                         </div>

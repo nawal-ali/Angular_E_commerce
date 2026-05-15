@@ -17,4 +17,12 @@ export class ProfileService {
   updateProfile(profileData: any, id: string) {
     return this.http.put(`${this.baseUrl}/${id}`, profileData);
   }
+
+  getOrders() {
+    return this.http.get<{ orders: any[]; count: number }>('http://shopbag.runasp.net/api/Customer/Orders');
+  }
+
+  getOrderById(id: number) {
+    return this.http.get<any>(`http://shopbag.runasp.net/api/Customer/Orders/${id}`);
+  }
 }

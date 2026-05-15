@@ -1,4 +1,4 @@
- <div class="profile-page">
+<div class="profile-page">
 
     <!-- ===== TOP BANNER ===== -->
     <div class="profile-banner">
@@ -167,14 +167,24 @@
 
                         <!-- ===== ORDERS TAB ===== -->
                         <section *ngIf="selectedTab === 'orders'">
-                            <div class="orders-list">
-                                <div *ngFor="let order of previousOrders" class="order-row">
+                            <div *ngIf="isLoadingOrders" class="profile-loading">
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                <span>Loading orders…</span>
+                            </div>
+                            <div *ngIf="!isLoadingOrders && previousOrders.length === 0" class="orders-empty">
+                                <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+                                <p>No previous orders found.</p>
+                            </div>
+                            <div *ngIf="!isLoadingOrders && previousOrders.length > 0" class="orders-list">
+                                <div *ngFor="let order of previousOrders" class="order-row"
+                                    (click)="openOrderModal(order)" role="button">
                                     <div class="order-icon-wrap">
                                         <i class="fa-solid fa-box"></i>
                                     </div>
                                     <div class="order-details">
                                         <span class="order-id">{{ order.orderId }}</span>
-                                        <span class="order-date">{{ order.date }}</span>
+                                        <span class="order-date">{{ order.date | date:'mediumDate' }}</span>
+                                        <span class="order-transaction">{{ order.transactionType }}</span>
                                     </div>
                                     <span class="order-total">{{ order.total }}</span>
                                     <span class="order-status" [ngClass]="{
@@ -241,6 +251,92 @@
 
                     </div>
                 </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ===== ORDER DETAIL MODAL ===== -->
+<div class="modal fade" tabindex="-1" #orderModal>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content order-modal-content" *ngIf="selectedOrder">
+
+            <div class="modal-header order-modal-header">
+                <div>
+                    <h5 class="modal-title order-modal-title">Order {{ selectedOrder.orderId }}</h5>
+                    <p class="order-modal-date mb-0">{{ selectedOrder.date | date:'MMMM d, y — h:mm a' }}</p>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-4">
+
+                <!-- Meta row -->
+                <div class="order-meta-row mb-4">
+                    <div class="order-meta-item">
+                        <span class="meta-label">Status</span>
+                        <span class="order-status" [ngClass]="{
+              'status-delivered': selectedOrder.status === 'Delivered',
+              'status-shipped':   selectedOrder.status === 'Shipped',
+              'status-pending':   selectedOrder.status === 'Pending'
+            }">
+                            <i class="fa-solid me-1" [ngClass]="{
+                'fa-check-circle': selectedOrder.status === 'Delivered',
+                'fa-truck':        selectedOrder.status === 'Shipped',
+                'fa-clock':        selectedOrder.status === 'Pending'
+              }"></i>
+                            {{ selectedOrder.status }}
+                        </span>
+                    </div>
+                    <div class="order-meta-item">
+                        <span class="meta-label">Payment</span>
+                        <span class="meta-value">{{ selectedOrder.transactionType }}</span>
+                    </div>
+                    <div class="order-meta-item">
+                        <span class="meta-label">Transaction</span>
+                        <span class="meta-value">{{ selectedOrder.transactionStatus }}</span>
+                    </div>
+                    <div class="order-meta-item">
+                        <span class="meta-label">Total</span>
+                        <span class="meta-value fw-bold">{{ selectedOrder.total }}</span>
+                    </div>
+                </div>
+
+                <!-- Items -->
+                <h6 class="order-items-title mb-3">Items</h6>
+
+                <div *ngIf="isLoadingItems" class="profile-loading py-3">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Loading items…</span>
+                </div>
+
+                <div *ngIf="!isLoadingItems && selectedOrder.items.length === 0" class="orders-empty py-3">
+                    <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+                    <p class="mb-0">No item details available.</p>
+                </div>
+
+                <div *ngIf="!isLoadingItems && selectedOrder.items.length > 0" class="order-items-list">
+                    <div class="order-item-row" *ngFor="let item of selectedOrder.items">
+                        <img *ngIf="item.productImg" [src]="item.productImg" [alt]="item.productName"
+                            class="order-item-img" />
+                        <div *ngIf="!item.productImg" class="order-item-img-placeholder">
+                            <i class="fa-solid fa-image"></i>
+                        </div>
+                        <div class="order-item-info">
+                            <span class="order-item-name">{{ item.productName || item.name || 'Product' }}</span>
+                            <span class="order-item-qty">Qty: {{ item.quantity || item.count || 1 }}</span>
+                        </div>
+                        <span class="order-item-price">${{ ((item.totalPrice || 0)).toFixed(2) }}</span>
+                        <!-- <span class="order-item-price">${{ ((item.price || item.unitPrice || 0) * (item.quantity ||
+                            item.count || 1)).toFixed(2) }}</span> -->
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer order-modal-footer">
+                <button type="button" class="btn order-close-btn" data-bs-dismiss="modal">Close</button>
             </div>
 
         </div>

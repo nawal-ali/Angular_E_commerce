@@ -1,9 +1,11 @@
- import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProfileService } from '../../core/services/profile.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+
+declare const bootstrap: any;
 
 type ProfileTab = 'personal' | 'address' | 'orders' | 'password';
 
@@ -37,11 +39,14 @@ export class ProfileComponent implements OnInit {
     confirmPassword: ''
   };
 
-  previousOrders = [
-    { orderId: '#2301', date: '2026-04-18', total: '$135.00', status: 'Delivered' },
-    { orderId: '#2287', date: '2026-03-29', total: '$59.50',  status: 'Shipped'   },
-    { orderId: '#2274', date: '2026-03-12', total: '$219.99', status: 'Pending'   }
-  ];
+  previousOrders: { id: number; orderId: string; date: string; total: string; status: string; transactionType: string; transactionStatus: string; items: any[] }[] = [];
+  isLoadingOrders = false;
+  ordersLoaded = false;
+  selectedOrder: typeof this.previousOrders[0] | null = null;
+  isLoadingItems = false;
+
+  @ViewChild('orderModal') orderModalRef!: ElementRef;
+  private modalInstance: any;
 
   menuItems: { key: ProfileTab; label: string; icon: string }[] = [
     { key: 'personal', label: 'Personal Info',   icon: 'fa-user'         },
@@ -87,6 +92,55 @@ export class ProfileComponent implements OnInit {
 
   selectTab(tab: ProfileTab): void {
     this.selectedTab = tab;
+    if (tab === 'orders') this.loadOrders();
+  }
+
+  loadOrders(): void {
+    if (this.ordersLoaded) return;
+    this.isLoadingOrders = true;
+    this.profileService.getOrders().subscribe({
+      next: (res) => {
+        this.previousOrders = (res.orders || []).map(o => ({
+          id: o.id,
+          orderId: `#${o.id}`,
+          date: o.orderDate,
+          total: `$${(o.totalPrice as number).toFixed(2)}`,
+          status: o.orderStatus,
+          transactionType: o.transactionType,
+          transactionStatus: o.transactionStatus,
+          items: o.items || []
+        }));
+        this.ordersLoaded = true;
+        this.isLoadingOrders = false;
+      },
+      error: () => {
+        this.toaster.show('Could not load orders.', 'error');
+        this.isLoadingOrders = false;
+      }
+    });
+  }
+
+  openOrderModal(order: typeof this.previousOrders[0]): void {
+    this.selectedOrder = { ...order, items: [] };
+    this.isLoadingItems = true;
+
+    if (!this.modalInstance) {
+      this.modalInstance = new bootstrap.Modal(this.orderModalRef.nativeElement);
+    }
+    this.modalInstance.show();
+
+    this.profileService.getOrderById(order.id).subscribe({
+      next: (res: any) => {
+        if (this.selectedOrder) {
+          this.selectedOrder.items = res.items || res.orderItems || [];
+        }
+        this.isLoadingItems = false;
+      },
+      error: () => {
+        this.toaster.show('Could not load order items.', 'error');
+        this.isLoadingItems = false;
+      }
+    });
   }
 
   // One method — always sends the full flat object the API expects

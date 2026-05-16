@@ -23,9 +23,11 @@
                         <input type="email" formControlName="email" class="form-control" placeholder="Enter your email"
                             [class.is-invalid]="isFieldInvalid('email')" />
                     </div>
-                    <div class="form-text text-danger" *ngIf="isFieldInvalid('email')">
-                        Please enter a valid email address.
-                    </div>
+                    @if (isFieldInvalid('email')) {
+                        <div class="form-text text-danger">
+                            Please enter a valid email address.
+                        </div>
+                    }
                 </div>
 
                 <!-- Password Field -->
@@ -41,9 +43,11 @@
                             <i [class]="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                         </button>
                     </div>
-                    <div class="form-text text-danger" *ngIf="isFieldInvalid('password')">
-                        Password is required (min 6 characters).
-                    </div>
+                    @if (isFieldInvalid('password')) {
+                        <div class="form-text text-danger">
+                            Password is required (min 6 characters).
+                        </div>
+                    }
                 </div>
 
                 <!-- Remember Me & Forgot Password -->
@@ -58,16 +62,21 @@
                 </div>
 
                 <!-- API Error Message -->
-                <div class="alert alert-danger" role="alert" *ngIf="apiError">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    {{ apiError }}
-                </div>
+                @if (apiError) {
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        {{ apiError }}
+                    </div>
+                }
 
                 <!-- Submit Button -->
                 <div class="d-grid gap-2 mb-3">
                     <button type="submit" class="btn btn-primary btn-lg" [disabled]="!loginForm.valid || isLoading">
-                        <span *ngIf="!isLoading"><i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In</span>
-                        <span *ngIf="isLoading"><i class="fa-solid fa-spinner fa-spin"></i> Signing in...</span>
+                        @if (!isLoading) {
+                            <span><i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In</span>
+                        } @else {
+                            <span><i class="fa-solid fa-spinner fa-spin"></i> Signing in...</span>
+                        }
                     </button>
                 </div>
 

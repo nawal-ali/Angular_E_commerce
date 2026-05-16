@@ -16,11 +16,13 @@
                 <div class="profile-menu">
                     <div class="profile-menu__title">Navigation</div>
                     <nav>
-                        <button type="button" *ngFor="let item of menuItems" class="profile-menu__item"
-                            [class.active]="selectedTab === item.key" (click)="selectTab(item.key)">
-                            <i class="fa-solid" [ngClass]="item.icon"></i>
-                            <span>{{ item.label }}</span>
-                        </button>
+                        @for (item of menuItems; track item.key) {
+                            <button type="button" class="profile-menu__item"
+                                [class.active]="selectedTab === item.key" (click)="selectTab(item.key)">
+                                <i class="fa-solid" [ngClass]="item.icon"></i>
+                                <span>{{ item.label }}</span>
+                            </button>
+                        }
                     </nav>
                 </div>
             </div>
@@ -33,34 +35,47 @@
                 <div class="profile-content__header d-flex justify-content-between align-items-start flex-wrap gap-2">
                     <div>
                         <h2>
-                            <span *ngIf="selectedTab === 'users'">Users Management</span>
-                            <span *ngIf="selectedTab === 'products'">Products Management</span>
-                            <span *ngIf="selectedTab === 'brands'">Brands Management</span>
-                            <span *ngIf="selectedTab === 'categories'">Categories Management</span>
-                            <span *ngIf="selectedTab === 'statistics'">System Statistics</span>
+                            @switch (selectedTab) {
+                                @case ('users')      { <span>Users Management</span> }
+                                @case ('products')   { <span>Products Management</span> }
+                                @case ('brands')     { <span>Brands Management</span> }
+                                @case ('categories') { <span>Categories Management</span> }
+                                @case ('statistics') { <span>System Statistics</span> }
+                            }
                         </h2>
                         <p class="text-muted mb-0">Manage your store data and settings.</p>
                     </div>
-                    <div *ngIf="!showForm">
-                        <button *ngIf="selectedTab === 'products'" class="primary-btn" (click)="openAddProduct()">
-                            <i class="fa-solid fa-plus"></i> Add Product
-                        </button>
-                        <button *ngIf="selectedTab === 'brands'" class="primary-btn" (click)="openAddBrand()">
-                            <i class="fa-solid fa-plus"></i> Add Brand
-                        </button>
-                        <button *ngIf="selectedTab === 'categories'" class="primary-btn" (click)="openAddCategory()">
-                            <i class="fa-solid fa-plus"></i> Add Category
-                        </button>
+                    @if (!showForm) {
+                    <div>
+                        @if (selectedTab === 'products') {
+                            <button class="primary-btn" (click)="openAddProduct()">
+                                <i class="fa-solid fa-plus"></i> Add Product
+                            </button>
+                        }
+                        @if (selectedTab === 'brands') {
+                            <button class="primary-btn" (click)="openAddBrand()">
+                                <i class="fa-solid fa-plus"></i> Add Brand
+                            </button>
+                        }
+                        @if (selectedTab === 'categories') {
+                            <button class="primary-btn" (click)="openAddCategory()">
+                                <i class="fa-solid fa-plus"></i> Add Category
+                            </button>
+                        }
                     </div>
+                    }
                 </div>
 
-                <div *ngIf="isLoading" class="profile-loading">
-                    <i class="fa-solid fa-spinner fa-spin"></i>
-                    <span>Loading data...</span>
-                </div>
+                @if (isLoading) {
+                    <div class="profile-loading">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <span>Loading data...</span>
+                    </div>
+                }
 
                 <!-- USERS TAB -->
-                <section *ngIf="selectedTab === 'users' && !isLoading">
+                @if (selectedTab === 'users' && !isLoading) {
+                <section>
                     <div class="admin-table-wrapper">
                         <table class="admin-table">
                             <thead>
@@ -74,10 +89,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngIf="users.length === 0">
-                                    <td colspan="6" class="text-center text-muted py-4">No users found.</td>
-                                </tr>
-                                <tr *ngFor="let user of users; let i = index">
+                                @if (users.length === 0) {
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">No users found.</td>
+                                    </tr>
+                                }
+                                @for (user of users; track user.id; let i = $index) {
+                                <tr>
                                     <td>{{ i + 1 }}</td>
                                     <td>{{ user.name }}</td>
                                     <td class="text-muted">{{ user.userName }}</td>
@@ -89,14 +107,18 @@
                                         </button>
                                     </td>
                                 </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </section>
+                }
 
                 <!-- PRODUCTS TAB -->
-                <section *ngIf="selectedTab === 'products' && !isLoading">
-                    <div *ngIf="showForm" class="admin-form-panel">
+                @if (selectedTab === 'products' && !isLoading) {
+                <section>
+                    @if (showForm) {
+                    <div class="admin-form-panel">
                         <div class="admin-form-panel__header">
                             <h4>{{ editingId ? 'Edit Product' : 'Add New Product' }}</h4>
                             <button class="icon-btn" (click)="cancelForm()"><i class="fa-solid fa-xmark"></i></button>
@@ -127,14 +149,18 @@
                                     <label>Category <span class="required">*</span></label>
                                     <select [(ngModel)]="productForm.categoryId" name="prodCat">
                                         <option [value]="0">— Select category —</option>
-                                        <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+                                        @for (c of categories; track c.id) {
+                                            <option [value]="c.id">{{ c.name }}</option>
+                                        }
                                     </select>
                                 </div>
                                 <div class="form-row">
                                     <label>Brand <span class="required">*</span></label>
                                     <select [(ngModel)]="productForm.brandId" name="prodBrand">
                                         <option [value]="0">— Select brand —</option>
-                                        <option *ngFor="let b of brands" [value]="b.id">{{ b.name }}</option>
+                                        @for (b of brands; track b.id) {
+                                            <option [value]="b.id">{{ b.name }}</option>
+                                        }
                                     </select>
                                 </div>
                                 <div class="form-row full-width">
@@ -152,17 +178,17 @@
                                     <label class="toggle-switch">
                                         <input type="checkbox" [(ngModel)]="productForm.status" name="prodStatus" />
                                         <span class="toggle-slider"></span>
-                                        <span class="toggle-label">{{ productForm.status ? 'Active' : 'Inactive'
-                                            }}</span>
+                                        <span class="toggle-label">{{ productForm.status ? 'Active' : 'Inactive' }}</span>
                                     </label>
                                 </div>
                             </div>
-                            <div *ngIf="productImagePreview || (editingId && editingProductMainImg)"
-                                class="img-preview-wrap">
-                                <img [src]="productImagePreview || (imageBase + editingProductMainImg)" alt="Preview"
-                                    class="img-preview"
-                                    (error)="$any($event.target).src='assets/images/placeholder.png'" />
-                            </div>
+                            @if (productImagePreview || (editingId && editingProductMainImg)) {
+                                <div class="img-preview-wrap">
+                                    <img [src]="productImagePreview || (imageBase + editingProductMainImg)" alt="Preview"
+                                        class="img-preview"
+                                        (error)="$any($event.target).src='assets/images/placeholder.png'" />
+                                </div>
+                            }
                             <div class="form-actions">
                                 <button class="primary-btn" (click)="saveProduct()" [disabled]="isSaving">
                                     <i class="fa-solid"
@@ -173,8 +199,10 @@
                             </div>
                         </div>
                     </div>
+                    }
 
-                    <div *ngIf="!showForm" class="admin-table-wrapper">
+                    @if (!showForm) {
+                    <div class="admin-table-wrapper">
                         <table class="admin-table">
                             <thead>
                                 <tr>
@@ -190,10 +218,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngIf="products.length === 0">
-                                    <td colspan="9" class="text-center text-muted py-4">No products found.</td>
-                                </tr>
-                                <tr *ngFor="let p of products; let i = index">
+                                @if (products.length === 0) {
+                                    <tr>
+                                        <td colspan="9" class="text-center text-muted py-4">No products found.</td>
+                                    </tr>
+                                }
+                                @for (p of products; track p.id; let i = $index) {
+                                <tr>
                                     <td>{{ i + 1 }}</td>
                                     <td>
                                         <img [src]="imageBase + p.mainImg" class="product-thumb"
@@ -215,14 +246,19 @@
                                         </button>
                                     </td>
                                 </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
+                    }
                 </section>
+                }
 
                 <!-- BRANDS TAB -->
-                <section *ngIf="selectedTab === 'brands' && !isLoading">
-                    <div *ngIf="showForm" class="admin-form-panel">
+                @if (selectedTab === 'brands' && !isLoading) {
+                <section>
+                    @if (showForm) {
+                    <div class="admin-form-panel">
                         <div class="admin-form-panel__header">
                             <h4>{{ editingId ? 'Edit Brand' : 'Add New Brand' }}</h4>
                             <button class="icon-btn" (click)="cancelForm()"><i class="fa-solid fa-xmark"></i></button>
@@ -259,8 +295,10 @@
                             </div>
                         </div>
                     </div>
+                    }
 
-                    <div *ngIf="!showForm" class="admin-table-wrapper">
+                    @if (!showForm) {
+                    <div class="admin-table-wrapper">
                         <table class="admin-table">
                             <thead>
                                 <tr>
@@ -273,10 +311,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngIf="brands.length === 0">
-                                    <td colspan="6" class="text-center text-muted py-4">No brands found.</td>
-                                </tr>
-                                <tr *ngFor="let b of brands; let i = index">
+                                @if (brands.length === 0) {
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">No brands found.</td>
+                                    </tr>
+                                }
+                                @for (b of brands; track b.id; let i = $index) {
+                                <tr>
                                     <td>{{ i + 1 }}</td>
                                     <td class="fw-semibold">{{ b.name }}</td>
                                     <td class="text-muted text-truncate-cell">{{ b.description || '—' }}</td>
@@ -298,14 +339,19 @@
                                         </button>
                                     </td>
                                 </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
+                    }
                 </section>
+                }
 
                 <!-- CATEGORIES TAB -->
-                <section *ngIf="selectedTab === 'categories' && !isLoading">
-                    <div *ngIf="showForm" class="admin-form-panel">
+                @if (selectedTab === 'categories' && !isLoading) {
+                <section>
+                    @if (showForm) {
+                    <div class="admin-form-panel">
                         <div class="admin-form-panel__header">
                             <h4>{{ editingId ? 'Edit Category' : 'Add New Category' }}</h4>
                             <button class="icon-btn" (click)="cancelForm()"><i class="fa-solid fa-xmark"></i></button>
@@ -322,8 +368,7 @@
                                     <label class="toggle-switch">
                                         <input type="checkbox" [(ngModel)]="categoryForm.status" name="catStatus" />
                                         <span class="toggle-slider"></span>
-                                        <span class="toggle-label">{{ categoryForm.status ? 'Active' : 'Inactive'
-                                            }}</span>
+                                        <span class="toggle-label">{{ categoryForm.status ? 'Active' : 'Inactive' }}</span>
                                     </label>
                                 </div>
                                 <div class="form-row full-width">
@@ -342,8 +387,10 @@
                             </div>
                         </div>
                     </div>
+                    }
 
-                    <div *ngIf="!showForm" class="admin-table-wrapper">
+                    @if (!showForm) {
+                    <div class="admin-table-wrapper">
                         <table class="admin-table">
                             <thead>
                                 <tr>
@@ -356,10 +403,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngIf="categories.length === 0">
-                                    <td colspan="6" class="text-center text-muted py-4">No categories found.</td>
-                                </tr>
-                                <tr *ngFor="let c of categories; let i = index">
+                                @if (categories.length === 0) {
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">No categories found.</td>
+                                    </tr>
+                                }
+                                @for (c of categories; track c.id; let i = $index) {
+                                <tr>
                                     <td>{{ i + 1 }}</td>
                                     <td class="fw-semibold">{{ c.name }}</td>
                                     <td class="text-muted text-truncate-cell">{{ c.description || '—' }}</td>
@@ -382,13 +432,17 @@
                                         </button>
                                     </td>
                                 </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
+                    }
                 </section>
+                }
 
                 <!-- STATISTICS TAB -->
-                <section *ngIf="selectedTab === 'statistics' && !isLoading">
+                @if (selectedTab === 'statistics' && !isLoading) {
+                <section>
                     <div class="stats-grid">
                         <div class="stat-card stat-card--users">
                             <div class="stat-card__icon"><i class="fa-solid fa-users"></i></div>
@@ -420,7 +474,8 @@
                         </div>
                     </div>
 
-                    <div class="stats-section mt-4" *ngIf="stats.length > 0">
+                    @if (stats.length > 0) {
+                    <div class="stats-section mt-4">
                         <h5 class="stats-section__title">
                             <i class="fa-solid fa-chart-simple"></i> Products by Category
                         </h5>
@@ -436,7 +491,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let s of stats">
+                                    @for (s of stats; track $index) {
+                                    <tr>
                                         <td class="fw-semibold">{{ s.key }}</td>
                                         <td><span class="count-badge">{{ s.count }}</span></td>
                                         <td>{{ s.avg }}</td>
@@ -448,15 +504,20 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    }
 
-                    <div *ngIf="stats.length === 0" class="text-center text-muted py-4">
-                        No statistics data available yet.
-                    </div>
+                    @if (stats.length === 0) {
+                        <div class="text-center text-muted py-4">
+                            No statistics data available yet.
+                        </div>
+                    }
                 </section>
+                }
 
             </div>
         </div>
@@ -475,28 +536,34 @@
                 <button type="button" class="btn-close btn-close-white" (click)="closeDeleteModal()"></button>
             </div>
 
-            <div class="modal-body" *ngIf="pendingDelete">
+            @if (pendingDelete) {
+            <div class="modal-body">
                 <p class="delete-modal__name">
                     You are about to delete: <strong>{{ pendingDelete.name }}</strong>
                 </p>
 
-                <div *ngIf="pendingDelete.linkedCount > 0" class="delete-modal__warning">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <div>
-                        <strong>Warning:</strong> This {{ pendingDelete.type }} has
-                        <span class="linked-count">{{ pendingDelete.linkedCount }} {{ pendingDelete.linkedCount === 1 ?
-                            'product' : 'products' }}</span> linked to it.
-                        <br />
-                        Deleting this {{ pendingDelete.type }} will <strong>also permanently delete all {{
-                            pendingDelete.linkedCount }} linked {{ pendingDelete.linkedCount === 1 ? 'product' :
-                            'products' }}</strong>.
+                @if (pendingDelete.linkedCount > 0) {
+                    <div class="delete-modal__warning">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <div>
+                            <strong>Warning:</strong> This {{ pendingDelete.type }} has
+                            <span class="linked-count">{{ pendingDelete.linkedCount }} {{ pendingDelete.linkedCount === 1 ?
+                                'product' : 'products' }}</span> linked to it.
+                            <br />
+                            Deleting this {{ pendingDelete.type }} will <strong>also permanently delete all {{
+                                pendingDelete.linkedCount }} linked {{ pendingDelete.linkedCount === 1 ? 'product' :
+                                'products' }}</strong>.
+                        </div>
                     </div>
-                </div>
+                }
 
-                <p class="delete-modal__confirm-text" *ngIf="pendingDelete.linkedCount === 0">
-                    This action cannot be undone.
-                </p>
+                @if (pendingDelete.linkedCount === 0) {
+                    <p class="delete-modal__confirm-text">
+                        This action cannot be undone.
+                    </p>
+                }
             </div>
+            }
 
             <div class="modal-footer delete-modal__footer">
                 <button type="button" class="secondary-btn" (click)="closeDeleteModal()">Cancel</button>

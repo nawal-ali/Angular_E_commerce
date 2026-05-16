@@ -81,30 +81,36 @@
       <p class="section-sub">A fresh selection of items you'll love — updated daily.</p>
     </div>
 
-    <div class="carousel-outer" *ngIf="products.length > 0">
+    @if (products.length > 0) {
+    <div class="carousel-outer">
       <!-- Track -->
       <div class="carousel-track-wrap">
         <div class="carousel-track" [style.transform]="'translateX(-' + (carouselIndex * (100 / 4)) + '%)'">
-          <div class="carousel-card" *ngFor="let product of products">
+          @for (product of products; track product.id) {
+          <div class="carousel-card">
             <div class="product-card-inner" [routerLink]="['/productDetails', product.id]">
               <div class="pc-img-wrap">
                 <img src="http://shopbag.runasp.net/Images/{{ product.mainImg }}" [alt]="product.name" class="pc-img"
                   onerror="this.src='assets/images/placeholder.png'" />
-                <span *ngIf="product.discount > 0" class="pc-badge">
-                  -{{ product.discount }}%
-                </span>
+                @if (product.discount > 0) {
+                  <span class="pc-badge">
+                    -{{ product.discount }}%
+                  </span>
+                }
               </div>
               <div class="pc-body">
                 <p class="pc-category">{{ product.categoryName || 'Fashion' }}</p>
                 <p class="pc-name">{{ product.name }}</p>
                 <div class="pc-price-row">
-                  <span *ngIf="product.discount > 0" class="pc-old">${{ product.price | number:'1.2-2' }}</span>
-                  <span class="pc-price">${{ getDiscountedPrice(product.price, product.discount) | number:'1.2-2'
-                    }}</span>
+                  @if (product.discount > 0) {
+                    <span class="pc-old">${{ product.price | number:'1.2-2' }}</span>
+                  }
+                  <span class="pc-price">${{ getDiscountedPrice(product.price, product.discount) | number:'1.2-2' }}</span>
                 </div>
               </div>
             </div>
           </div>
+          }
         </div>
       </div>
 
@@ -118,22 +124,29 @@
 
       <!-- Dots -->
       <div class="carousel-dots">
-        <button *ngFor="let dot of carouselDots" class="carousel-dot" [class.active]="dot === carouselIndex"
-          (click)="goToSlide(dot)">
-        </button>
+        @for (dot of carouselDots; track $index) {
+          <button class="carousel-dot" [class.active]="dot === carouselIndex"
+            (click)="goToSlide(dot)">
+          </button>
+        }
       </div>
     </div>
+    }
 
     <!-- Skeleton while loading -->
-    <div class="row g-3" *ngIf="products.length === 0">
-      <div class="col-6 col-md-3" *ngFor="let s of [1,2,3,4]">
+    @if (products.length === 0) {
+    <div class="row g-3">
+      @for (s of [1,2,3,4]; track $index) {
+      <div class="col-6 col-md-3">
         <div class="skeleton-pc">
           <div class="skel-img"></div>
           <div class="skel-line w-75 mt-3"></div>
           <div class="skel-line w-50 mt-2"></div>
         </div>
       </div>
+      }
     </div>
+    }
 
     <div class="text-center mt-4">
       <a routerLink="/products" class="btn-outline-primary-custom">
@@ -152,7 +165,8 @@
       <p class="section-sub">We've built our store around what shoppers actually care about.</p>
     </div>
     <div class="row g-4">
-      <div class="col-12 col-sm-6 col-lg-3 reveal" *ngFor="let f of features; let i = index"
+      @for (f of features; track $index; let i = $index) {
+      <div class="col-12 col-sm-6 col-lg-3 reveal"
         [style.animation-delay]="(i * 0.1) + 's'">
         <div class="feature-card">
           <div class="feature-icon">
@@ -162,6 +176,7 @@
           <p class="feature-desc">{{ f.desc }}</p>
         </div>
       </div>
+      }
     </div>
   </div>
 </section>
@@ -170,7 +185,8 @@
 <section class="section-banners reveal">
   <div class="container">
     <div class="row g-4">
-      <div class="col-12 col-md-6" *ngFor="let banner of banners">
+      @for (banner of banners; track $index) {
+      <div class="col-12 col-md-6">
         <div class="banner-card" [ngClass]="banner.color">
           <div class="banner-content">
             <span class="banner-tag">{{ banner.tag }}</span>
@@ -185,6 +201,7 @@
           </div>
         </div>
       </div>
+      }
     </div>
   </div>
 </section>
@@ -225,7 +242,8 @@
 
       <div class="col-lg-8">
         <div class="faq-list">
-          <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.faq-open]="faq.open">
+          @for (faq of faqs; track $index; let i = $index) {
+          <div class="faq-item" [class.faq-open]="faq.open">
             <button class="faq-question" (click)="toggleFaq(i)">
               <span>{{ faq.question }}</span>
               <i class="fa-solid" [ngClass]="faq.open ? 'fa-minus' : 'fa-plus'"></i>
@@ -234,6 +252,7 @@
               <p>{{ faq.answer }}</p>
             </div>
           </div>
+          }
         </div>
       </div>
 

@@ -9,17 +9,22 @@
                         <i class="fa-solid fa-heart me-2"></i>My Wishlist
                     </h1>
                     <p class="hero-subtitle mb-0">
-                        <span *ngIf="!isLoading">
-                            {{ wishlistItems.length }} {{ wishlistItems.length === 1 ? 'item' : 'items' }} saved
-                        </span>
-                        <span *ngIf="isLoading">Loading your wishlist…</span>
+                        @if (!isLoading) {
+                            <span>
+                                {{ wishlistItems.length }} {{ wishlistItems.length === 1 ? 'item' : 'items' }} saved
+                            </span>
+                        } @else {
+                            <span>Loading your wishlist…</span>
+                        }
                     </p>
                 </div>
-                <button *ngIf="!isLoading && wishlistItems.length > 0" class="btn btn-clear-all"
-                    (click)="confirmClear()" [disabled]="isClearing">
-                    <i class="fa-solid fa-trash-can me-2"></i>
-                    {{ isClearing ? 'Clearing…' : 'Clear All' }}
-                </button>
+                @if (!isLoading && wishlistItems.length > 0) {
+                    <button class="btn btn-clear-all"
+                        (click)="confirmClear()" [disabled]="isClearing">
+                        <i class="fa-solid fa-trash-can me-2"></i>
+                        {{ isClearing ? 'Clearing…' : 'Clear All' }}
+                    </button>
+                }
             </div>
         </div>
     </div>
@@ -27,8 +32,10 @@
     <div class="container py-5">
 
         <!-- ===== SKELETON ===== -->
-        <div *ngIf="isLoading" class="row g-4">
-            <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let s of skeletons">
+        @if (isLoading) {
+        <div class="row g-4">
+            @for (s of skeletons; track $index) {
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                 <div class="skeleton-card">
                     <div class="skeleton-img"></div>
                     <div class="p-3">
@@ -38,10 +45,13 @@
                     </div>
                 </div>
             </div>
+            }
         </div>
+        }
 
         <!-- ===== EMPTY ===== -->
-        <div *ngIf="!isLoading && wishlistItems.length === 0" class="empty-state text-center py-5">
+        @if (!isLoading && wishlistItems.length === 0) {
+        <div class="empty-state text-center py-5">
             <div class="empty-icon-wrap mx-auto mb-4">
                 <i class="fa-regular fa-heart fa-3x" style="color: var(--primary-color)"></i>
             </div>
@@ -51,19 +61,25 @@
                 <i class="fa-solid fa-bag-shopping me-2"></i>Browse Products
             </a>
         </div>
+        }
 
         <!-- ===== GRID ===== -->
-        <div *ngIf="!isLoading && wishlistItems.length > 0" class="row g-4 px-4">
-            <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let item of wishlistItems">
+        @if (!isLoading && wishlistItems.length > 0) {
+        <div class="row g-4 px-4">
+            @for (item of wishlistItems; track item.productId) {
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
 
                 <div class="product-card h-100 d-flex flex-column" [class.is-removing]="isRemoving(item.productId)">
 
                     <!-- Discount badge + remove btn -->
                     <div class="card-top-row">
-                        <span *ngIf="item.product.discount > 0" class="badge-discount">
-                            -{{ item.product.discount }}%
-                        </span>
-                        <span *ngIf="!item.product.discount"></span>
+                        @if (item.product.discount > 0) {
+                            <span class="badge-discount">
+                                -{{ item.product.discount }}%
+                            </span>
+                        } @else {
+                            <span></span>
+                        }
                         <button class="btn-remove" (click)="removeFromWishlist(item.productId)"
                             [disabled]="isRemoving(item.productId)" title="Remove">
                             <i class="fa-solid fa-xmark"></i>
@@ -90,22 +106,24 @@
 
                         <!-- Stars -->
                         <div class="d-flex align-items-center gap-1 mb-2">
-                            <ng-container *ngFor="let star of getStars(item.product.rate)">
+                            @for (star of getStars(item.product.rate); track $index) {
                                 <i class="fa-xs rating-star" [ngClass]="{
-                    'fa-solid fa-star': star === 'full',
-                    'fa-solid fa-star-half-stroke': star === 'half',
-                    'fa-regular fa-star': star === 'empty'
-                  }">
+                                    'fa-solid fa-star': star === 'full',
+                                    'fa-solid fa-star-half-stroke': star === 'half',
+                                    'fa-regular fa-star': star === 'empty'
+                                }">
                                 </i>
-                            </ng-container>
+                            }
                             <span class="rating-val ms-1">{{ item.product.rate }}/5</span>
                         </div>
 
                         <!-- Price -->
                         <div class="d-flex align-items-baseline gap-2 mb-1">
-                            <span *ngIf="item.product.discount > 0" class="price-original">
-                                ${{ item.product.price | number:'1.2-2' }}
-                            </span>
+                            @if (item.product.discount > 0) {
+                                <span class="price-original">
+                                    ${{ item.product.price | number:'1.2-2' }}
+                                </span>
+                            }
                             <span class="price-final">
                                 ${{ getDiscountedPrice(item.product.price, item.product.discount) | number:'1.2-2' }}
                             </span>
@@ -121,18 +139,23 @@
                     <div class="px-3 pb-3">
                         <button class="btn btn-add-cart w-100" (click)="addToCart(item.productId)"
                             [disabled]="isAddingToCart(item.productId)">
-                            <span *ngIf="!isAddingToCart(item.productId)">
-                                <i class="fa-solid fa-bag-shopping me-2"></i>Add to Cart
-                            </span>
-                            <span *ngIf="isAddingToCart(item.productId)">
-                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>Adding…
-                            </span>
+                            @if (!isAddingToCart(item.productId)) {
+                                <span>
+                                    <i class="fa-solid fa-bag-shopping me-2"></i>Add to Cart
+                                </span>
+                            } @else {
+                                <span>
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>Adding…
+                                </span>
+                            }
                         </button>
                     </div>
 
                 </div>
             </div>
+            }
         </div>
+        }
     </div>
 
 </div>

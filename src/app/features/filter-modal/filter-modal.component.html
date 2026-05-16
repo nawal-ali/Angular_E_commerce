@@ -7,12 +7,14 @@
     <div class="col-md-6 mb-4 border-end">
       <label class="fw-semibold mb-3">Brands</label>
       <div class="brand-scroll-area custom-scrollbar">
-        <div class="form-check mb-2" *ngFor="let brand of brands">
-          <input class="form-check-input custom-checkbox" type="checkbox" 
-                 [id]="'brand' + brand.id"
-                 (change)="onBrandChange(brand.name, $event)">
-          <label class="form-check-label" [for]="'brand' + brand.id">{{brand.name}}</label>
-        </div>
+        @for (brand of brands; track brand.id) {
+          <div class="form-check mb-2">
+            <input class="form-check-input custom-checkbox" type="checkbox"
+                   [id]="'brand' + brand.id"
+                   (change)="onBrandChange(brand.name, $event)">
+            <label class="form-check-label" [for]="'brand' + brand.id">{{brand.name}}</label>
+          </div>
+        }
       </div>
     </div>
 

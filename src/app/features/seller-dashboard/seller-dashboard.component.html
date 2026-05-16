@@ -10,9 +10,11 @@
                     </h1>
                     <p class="seller-hero__sub">Manage your product listings</p>
                 </div>
-                <button class="btn btn-add" (click)="openAddProduct()" *ngIf="!showForm">
-                    <i class="fa-solid fa-plus me-2"></i>Add New Product
-                </button>
+                @if (!showForm) {
+                    <button class="btn btn-add" (click)="openAddProduct()">
+                        <i class="fa-solid fa-plus me-2"></i>Add New Product
+                    </button>
+                }
             </div>
         </div>
     </div>
@@ -20,7 +22,8 @@
     <div class="container seller-body">
 
         <!-- ===== PRODUCT FORM ===== -->
-        <div class="form-card reveal-form" *ngIf="showForm">
+        @if (showForm) {
+        <div class="form-card reveal-form">
             <div class="form-card__header">
                 <h4 class="form-card__title">
                     <i class="fa-solid me-2" [ngClass]="editingId ? 'fa-pen' : 'fa-plus-circle'"></i>
@@ -37,13 +40,18 @@
                 <div class="field full">
                     <label class="field-label">Product Image</label>
                     <div class="img-upload-wrap" (click)="imgInput.click()">
-                        <img *ngIf="productImagePreview" [src]="productImagePreview" class="img-preview" />
-                        <img *ngIf="!productImagePreview && editingMainImg" [src]="imageBase + editingMainImg"
-                            class="img-preview" />
-                        <div *ngIf="!productImagePreview && !editingMainImg" class="img-placeholder">
-                            <i class="fa-solid fa-cloud-arrow-up fa-2x mb-2" style="color: var(--primary-color)"></i>
-                            <p class="mb-0">Click to upload image</p>
-                        </div>
+                        @if (productImagePreview) {
+                            <img [src]="productImagePreview" class="img-preview" />
+                        }
+                        @if (!productImagePreview && editingMainImg) {
+                            <img [src]="imageBase + editingMainImg" class="img-preview" />
+                        }
+                        @if (!productImagePreview && !editingMainImg) {
+                            <div class="img-placeholder">
+                                <i class="fa-solid fa-cloud-arrow-up fa-2x mb-2" style="color: var(--primary-color)"></i>
+                                <p class="mb-0">Click to upload image</p>
+                            </div>
+                        }
                     </div>
                     <input #imgInput type="file" accept="image/*" class="d-none" (change)="onImageSelected($event)" />
                 </div>
@@ -90,7 +98,9 @@
                     <label class="field-label">Category</label>
                     <select [(ngModel)]="productForm.categoryId" name="categoryId" class="field-input">
                         <option [ngValue]="0" disabled>Select category</option>
-                        <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+                        @for (c of categories; track c.id) {
+                            <option [ngValue]="c.id">{{ c.name }}</option>
+                        }
                     </select>
                 </div>
 
@@ -98,7 +108,9 @@
                     <label class="field-label">Brand</label>
                     <select [(ngModel)]="productForm.brandId" name="brandId" class="field-input">
                         <option [ngValue]="0" disabled>Select brand</option>
-                        <option *ngFor="let b of brands" [ngValue]="b.id">{{ b.name }}</option>
+                        @for (b of brands; track b.id) {
+                            <option [ngValue]="b.id">{{ b.name }}</option>
+                        }
                     </select>
                 </div>
 
@@ -107,15 +119,19 @@
             <div class="form-footer">
                 <button class="btn-cancel" (click)="cancelForm()">Cancel</button>
                 <button class="btn-save" (click)="saveProduct()" [disabled]="isSaving">
-                    <span *ngIf="!isSaving"><i class="fa-solid fa-floppy-disk me-2"></i>{{ editingId ? 'Update Product'
-                        : 'Create Product' }}</span>
-                    <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2"></span>Saving…</span>
+                    @if (!isSaving) {
+                        <span><i class="fa-solid fa-floppy-disk me-2"></i>{{ editingId ? 'Update Product' : 'Create Product' }}</span>
+                    } @else {
+                        <span><span class="spinner-border spinner-border-sm me-2"></span>Saving…</span>
+                    }
                 </button>
             </div>
         </div>
+        }
 
         <!-- ===== STATS BAR ===== -->
-        <div class="stats-bar" *ngIf="!showForm && !isLoading">
+        @if (!showForm && !isLoading) {
+        <div class="stats-bar">
             <div class="stat-chip">
                 <i class="fa-solid fa-box"></i>
                 <span>{{ products.length }} Products</span>
@@ -129,25 +145,32 @@
                 <span>{{ discountedCount }} On Sale</span>
             </div>
         </div>
+        }
 
         <!-- ===== LOADING ===== -->
-        <div *ngIf="isLoading" class="loading-wrap">
+        @if (isLoading) {
+        <div class="loading-wrap">
             <i class="fa-solid fa-spinner fa-spin fa-2x" style="color:var(--primary-color)"></i>
             <p>Loading your products…</p>
         </div>
+        }
 
         <!-- ===== EMPTY ===== -->
-        <div *ngIf="!isLoading && !showForm && products.length === 0" class="empty-state text-center py-5">
+        @if (!isLoading && !showForm && products.length === 0) {
+        <div class="empty-state text-center py-5">
             <div class="empty-icon mx-auto mb-4">
                 <i class="fa-solid fa-box-open fa-2x" style="color:var(--primary-color)"></i>
             </div>
             <h5 class="fw-bold">No products yet</h5>
             <p style="color:var(--text-secondary)">Click "Add New Product" to list your first item.</p>
         </div>
+        }
 
         <!-- ===== PRODUCT GRID ===== -->
-        <div class="row g-4" *ngIf="!isLoading && !showForm && products.length > 0">
-            <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let p of products">
+        @if (!isLoading && !showForm && products.length > 0) {
+        <div class="row g-4">
+            @for (p of products; track p.id) {
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                 <div class="product-card">
 
                     <!-- Status badge -->
@@ -156,7 +179,9 @@
                     </span>
 
                     <!-- Discount badge -->
-                    <span *ngIf="p.discount > 0" class="discount-badge">-{{ p.discount }}%</span>
+                    @if (p.discount > 0) {
+                        <span class="discount-badge">-{{ p.discount }}%</span>
+                    }
 
                     <!-- Image -->
                     <div class="pc-img-wrap">
@@ -169,9 +194,10 @@
                         <p class="pc-category">{{ p.categoryName || '—' }}</p>
                         <p class="pc-name">{{ p.name }}</p>
                         <div class="pc-price-row">
-                            <span *ngIf="p.discount > 0" class="pc-old">${{ p.price | number:'1.2-2' }}</span>
-                            <span class="pc-price">${{ getDiscountedPrice(p.price, p.discount) | number:'1.2-2'
-                                }}</span>
+                            @if (p.discount > 0) {
+                                <span class="pc-old">${{ p.price | number:'1.2-2' }}</span>
+                            }
+                            <span class="pc-price">${{ getDiscountedPrice(p.price, p.discount) | number:'1.2-2' }}</span>
                         </div>
                         <p class="pc-stock">
                             <i class="fa-solid fa-cubes me-1"></i>{{ p.quantity }} in stock
@@ -189,7 +215,9 @@
                     </div>
                 </div>
             </div>
+            }
         </div>
+        }
 
     </div>
 </div>

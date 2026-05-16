@@ -41,7 +41,8 @@
 
         <form [formGroup]="checkoutForm">
           <!--  ==== customer information  ====  -->
-          <div class="card p-4 border-0 shadow-sm animate__animated animate__fadeIn" *ngIf="currentStep === 'info'">
+          @if (currentStep === 'info') {
+          <div class="card p-4 border-0 shadow-sm animate__animated animate__fadeIn">
             <h5 class=" mb-4">Check Out Your Items</h5>
             <div class="row">
 
@@ -51,13 +52,16 @@
                 <input formControlName="firstName" type="text" class="form-control is-invalid bg-light"
                   [class.is-invalid]="checkoutForm.get('firstName')?.touched && checkoutForm.get('firstName')?.invalid">
 
-                <!--  === error msg ====   -->
-                <div *ngIf="checkoutForm.get('firstName')?.touched && checkoutForm.get('firstName')?.invalid"
-                  class="text-danger smaller mt-1">
-                  <span *ngIf="checkoutForm.get('firstName')?.errors?.['required']">First name is required.</span>
-                  <span *ngIf="checkoutForm.get('firstName')?.errors?.['minlength']">Must be at least 3
-                    characters.</span>
-                </div>
+                @if (checkoutForm.get('firstName')?.touched && checkoutForm.get('firstName')?.invalid) {
+                  <div class="text-danger smaller mt-1">
+                    @if (checkoutForm.get('firstName')?.errors?.['required']) {
+                      <span>First name is required.</span>
+                    }
+                    @if (checkoutForm.get('firstName')?.errors?.['minlength']) {
+                      <span>Must be at least 3 characters.</span>
+                    }
+                  </div>
+                }
               </div>
 
               <!-- Last Name -->
@@ -66,13 +70,16 @@
                 <input formControlName="lastName" type="text" class="form-control is-invalid bg-light"
                   [class.is-invalid]="checkoutForm.get('lastName')?.touched && checkoutForm.get('lastName')?.invalid">
 
-                <!--  === error msg ====   -->
-                <div *ngIf="checkoutForm.get('lastName')?.touched && checkoutForm.get('lastName')?.invalid"
-                  class="text-danger smaller mt-1">
-                  <span *ngIf="checkoutForm.get('lastName')?.errors?.['required']">Last name is required.</span>
-                  <span *ngIf="checkoutForm.get('lastName')?.errors?.['minlength']">Must be at least 3
-                    characters.</span>
-                </div>
+                @if (checkoutForm.get('lastName')?.touched && checkoutForm.get('lastName')?.invalid) {
+                  <div class="text-danger smaller mt-1">
+                    @if (checkoutForm.get('lastName')?.errors?.['required']) {
+                      <span>Last name is required.</span>
+                    }
+                    @if (checkoutForm.get('lastName')?.errors?.['minlength']) {
+                      <span>Must be at least 3 characters.</span>
+                    }
+                  </div>
+                }
               </div>
 
               <!-- -====Adress ===== -->
@@ -82,27 +89,33 @@
                   [class.is-invalid]="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid"
                   rows="3" placeholder="e.g. 123 Main St, Apartment 4B"></textarea>
 
-                <div *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid"
-                  class="text-danger smaller mt-1">
-                  <span *ngIf="checkoutForm.get('address')?.errors?.['required']">Address is required.</span>
-                  <span *ngIf="checkoutForm.get('address')?.errors?.['pattern']">Address should contain only letters,
-                    numbers, and basic marks like ( , . - ).</span>
-                </div>
+                @if (checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid) {
+                  <div class="text-danger smaller mt-1">
+                    @if (checkoutForm.get('address')?.errors?.['required']) {
+                      <span>Address is required.</span>
+                    }
+                    @if (checkoutForm.get('address')?.errors?.['pattern']) {
+                      <span>Address should contain only letters, numbers, and basic marks like ( , . - ).</span>
+                    }
+                  </div>
+                }
               </div>
 
             </div>
 
             <!-- btn next step  -->
-            <button class="btn btn-nextStep py-2 px-5 
+            <button class="btn btn-nextStep py-2 px-5
               rounded-pill w-auto ms-auto"
               [disabled]="checkoutForm.get('firstName')?.invalid || checkoutForm.get('address')?.invalid"
               (click)="goToStep('payment')">Next Step</button>
           </div>
+          }
 
 
 
           <!-- Payment Details -->
-          <div class="card p-4 border-0 shadow-sm animate__animated animate__fadeIn" *ngIf="currentStep === 'payment'">
+          @if (currentStep === 'payment') {
+          <div class="card p-4 border-0 shadow-sm animate__animated animate__fadeIn">
             <h5 class=" mb-4">Select Payment Method</h5>
 
             <!-- Cash on Delivery -->
@@ -110,7 +123,9 @@
               [class.active-radio]="paymentMethod === 'cash'" (click)="paymentMethod = 'cash'">
               <span><i class="fas fa-money-bill-wave me-3"></i> Cash on Delivery</span>
               <div class="radio-outer">
-                <div class="radio-inner" *ngIf="paymentMethod === 'cash'"></div>
+                @if (paymentMethod === 'cash') {
+                  <div class="radio-inner"></div>
+                }
               </div>
             </div>
 
@@ -119,47 +134,55 @@
               [class.active-radio]="paymentMethod === 'online'" (click)="paymentMethod = 'online'">
               <span><i class="fab fa-cc-visa me-3"></i> Credit Card </span>
               <div class="radio-outer">
-                <div class="radio-inner" *ngIf="paymentMethod === 'online'"></div>
+                @if (paymentMethod === 'online') {
+                  <div class="radio-inner"></div>
+                }
               </div>
             </div>
 
             <!--  Cart field  -->
-            <div *ngIf="paymentMethod === 'online'" class="mt-4 p-3 bg-light rounded shadow-inner">
+            @if (paymentMethod === 'online') {
+            <div class="mt-4 p-3 bg-light rounded shadow-inner">
               <label class="small fw-bold  fs-6 mb-2">Card Number</label>
 
               <input formControlName="cardNumber" type="text" class="form-control mb-1 "
                 placeholder="16 digits card number">
 
-              <!-- Error Message  -->
-              <div *ngIf="checkoutForm.get('cardNumber')?.touched && checkoutForm.get('cardNumber')?.invalid"
-                class="text-danger smaller">
-                <span *ngIf="checkoutForm.get('cardNumber')?.errors?.['pattern']">Please enter a valid 16-digit card
-                  number.</span>
-              </div>
+              @if (checkoutForm.get('cardNumber')?.touched && checkoutForm.get('cardNumber')?.invalid) {
+                <div class="text-danger smaller">
+                  @if (checkoutForm.get('cardNumber')?.errors?.['pattern']) {
+                    <span>Please enter a valid 16-digit card number.</span>
+                  }
+                </div>
+              }
 
               <div class="row mt-2">
                 <div class="col-6">
                   <input formControlName="expiry" type="text" class="form-control  " placeholder="MM/YY">
-                  <div *ngIf="checkoutForm.get('expiry')?.touched && checkoutForm.get('expiry')?.invalid"
-                    class="text-danger smaller">
-                    Invalid date (MM/YY).
-                  </div>
+                  @if (checkoutForm.get('expiry')?.touched && checkoutForm.get('expiry')?.invalid) {
+                    <div class="text-danger smaller">
+                      Invalid date (MM/YY).
+                    </div>
+                  }
 
                 </div>
 
                 <div class="col-6">
                   <input formControlName="cvv" type="text" class="form-control" placeholder="CVV">
-                  <div *ngIf="checkoutForm.get('cvv')?.touched && checkoutForm.get('cvv')?.invalid"
-                    class="text-danger smaller">
-                    Must be 3 digits.
-                  </div>
+                  @if (checkoutForm.get('cvv')?.touched && checkoutForm.get('cvv')?.invalid) {
+                    <div class="text-danger smaller">
+                      Must be 3 digits.
+                    </div>
+                  }
                 </div>
               </div>
 
             </div>
+            }
             <!-- Btn Back -->
             <button class="btn btn-back mt-4 me-2 rounded-pill" (click)="goToStep('info')">Back</button>
           </div>
+          }
 
 
         </form>
@@ -173,7 +196,8 @@
           <h5 class=" mb-4">Current Order</h5>
 
           <div class="order-scroll pe-2" style="max-height: 350px; overflow-y: auto;">
-            <div *ngFor="let item of checkoutItems" class="d-flex align-items-center mb-3">
+            @for (item of checkoutItems; track $index) {
+            <div class="d-flex align-items-center mb-3">
               <div class="d-flex align-items-center checkout-card w-100">
                 <!-- image  -->
                 <img [src]="'http://shopbag.runasp.net/Images/' + item.product.mainImg" class="rounded"
@@ -187,6 +211,7 @@
                 <span class="size fw-bold small">${{item.product.price * item.count}}</span>
               </div>
             </div>
+            }
           </div>
 
           <div class="border-top mt-3 pt-3">
@@ -202,13 +227,13 @@
               <span class="h5 fw-bold mb-0">Total</span>
               <span class="h4  mb-0 text-success">${{calcTotal()}}</span>
             </div>
-            <button class="btn btn-confirm w-100 py-2 rounded-pill" 
+            <button class="btn btn-confirm w-100 py-2 rounded-pill"
             (click)="confirmOrder()"
             >Confirm Order</button>
 
-            <app-confirm-order 
-              [isVisible]="showSuccessModal" 
-              [totalPrice]="calcTotal()" 
+            <app-confirm-order
+              [isVisible]="showSuccessModal"
+              [totalPrice]="calcTotal()"
               [paymentMethod]="paymentMethod"
               [cardLastFour]="getLastFourDigits()"
               (close)="showSuccessModal = false"

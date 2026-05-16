@@ -11,40 +11,41 @@ import { SingleProductComponent } from './pages/single-product/single-product.co
 import { WishlistComponent } from './features/wishlist/wishlist.component';
 import { CartComponent } from './features/cart/cart.component';
 import { AdminDashboardComponent } from './features/admin-dashboard/admin-dashboard.component';
+import { SellerDashboardComponent } from './features/seller-dashboard/seller-dashboard.component';
 import { adminGuard } from './core/guards/admin.guard';
+import { sellerGuard } from './core/guards/seller.guard';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 
 export const routes: Routes = [
-    {
+  {
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: 'home', component: HomeComponent , title : 'Home'},
-      { path: 'product', component: ProductsComponent , title : 'Products'},
-      { path: 'contact', component: ContactComponent , title : 'Contact'},
-      { path: 'about', component: AboutComponent , title : 'About'},
-      { path: 'whishlist', component: WishlistComponent , title : 'Wishlist'},
-      { path: 'checkout', component: CheckoutComponent , title : 'Checkout'},
-      { path: 'productDetails/:id', component: SingleProductComponent , title : 'Single Product Component'},
+      { path: 'home',                  component: HomeComponent,          title: 'Home' },
+      { path: 'product',               component: ProductsComponent,      title: 'Products' },
+      { path: 'contact',               component: ContactComponent,       title: 'Contact' },
+      { path: 'about',                 component: AboutComponent,         title: 'About' },
+      { path: 'whishlist',             component: WishlistComponent,      title: 'Wishlist' },
+      { path: 'checkout',              component: CheckoutComponent,      title: 'Checkout' },
+      { path: 'productDetails/:id',    component: SingleProductComponent, title: 'Product' },
+      { path: 'profile/:id',           component: ProfileComponent },
+      { path: 'cart',                  component: CartComponent,          title: 'Cart' },
       {
         path: 'admin-dashboard',
         component: AdminDashboardComponent,
         title: 'Admin Dashboard',
         canActivate: [adminGuard]
       },
-      {path:'profile/:id', component:ProfileComponent},
-      {path:'cart', component:CartComponent , title : 'Cart'},
-
+      {
+        path: 'seller-dashboard',          // ← new
+        component: SellerDashboardComponent,
+        title: 'Seller Dashboard',
+        canActivate: [sellerGuard]
+      },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      
     ]
   },
-
-  { path: 'login', component: LoginComponent },
+  { path: 'login',    component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-
-
-  { path: '**', redirectTo: 'home' }
+  { path: '**',       redirectTo: 'home' }
 ];
-
- 

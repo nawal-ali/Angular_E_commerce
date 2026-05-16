@@ -1,6 +1,7 @@
 <!-- Success Modal -->
 
-<div class="glass-overlay animate__animated animate__fadeIn" *ngIf="isVisible">
+@if (isVisible) {
+<div class="glass-overlay animate__animated animate__fadeIn">
   <div class="custom-modal animate__animated animate__zoomIn">
     <div class="modal-header-custom">
       <span class="order-label">
@@ -28,9 +29,11 @@
         <span class="method-title">Payment Method</span>
         <div class="method-badge">
            <i class="fas fa-wallet me-2"></i> {{ paymentMethod === 'online' ? 'Credit Card' : 'Cash' }} <br >
-          <small *ngIf="paymentMethod === 'online'" class="text-50">
-        **** {{ cardLastFour }}
-      </small>
+          @if (paymentMethod === 'online') {
+            <small class="text-50">
+              **** {{ cardLastFour }}
+            </small>
+          }
         </div>
       </div>
     </div>
@@ -41,10 +44,11 @@
       </button>
 
       <div class="divider">|</div>
-      
+
      <button class="btn-pay" (click)="onPay()">
       <i class="fas fa-check-circle me-1"></i> Pay
     </button>
     </div>
   </div>
 </div>
+}

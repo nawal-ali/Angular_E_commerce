@@ -25,7 +25,8 @@
   <div class="container py-5">
 
     <!-- ===== EMPTY ===== -->
-    <div *ngIf="items.length === 0" class="empty-state text-center py-5">
+    @if (items.length === 0) {
+    <div class="empty-state text-center py-5">
 
       <div class="empty-icon-wrap mx-auto mb-4">
         <i class="fa-solid fa-cart-shopping fa-3x"></i>
@@ -43,14 +44,17 @@
       </a>
 
     </div>
+    }
 
     <!-- ===== CART ITEMS ===== -->
-    <div *ngIf="items.length > 0" class="row g-4 px-4">
+    @if (items.length > 0) {
+    <div class="row g-4 px-4">
 
       <!-- LEFT -->
       <div class="col-lg-8">
 
-        <div class="cart-card mb-3" *ngFor="let item of items">
+        @for (item of items; track item.productId) {
+        <div class="cart-card mb-3">
 
           <div class="row align-items-center g-3">
 
@@ -116,6 +120,7 @@
           </div>
 
         </div>
+        }
 
       </div>
 
@@ -148,7 +153,7 @@
           <button class="btn btn-checkout w-100 mt-4" >
             <i class="fa-solid fa-credit-card me-2"></i>
              <a href="/checkout" class="text-black text-decoration-none"> Proceed to Checkout</a>
-            
+
           </button>
 
           <button class="btn btn-continue w-100 mt-3">
@@ -160,6 +165,7 @@
       </div>
 
     </div>
+    }
 
   </div>
 

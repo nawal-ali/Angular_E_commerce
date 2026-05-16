@@ -22,8 +22,9 @@
                             <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
                             <input type="text" formControlName="name" class="form-control" placeholder="John Doe" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('name')">Please enter your full name.
-                        </div>
+                        @if (isFieldInvalid('name')) {
+                            <div class="form-text text-danger">Please enter your full name.</div>
+                        }
                     </div>
 
                     <div class="col-md-6">
@@ -32,8 +33,9 @@
                             <span class="input-group-text"><i class="fa-solid fa-id-badge"></i></span>
                             <input type="text" formControlName="userName" class="form-control" placeholder="johndoe" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('userName')">Enter a valid username.
-                        </div>
+                        @if (isFieldInvalid('userName')) {
+                            <div class="form-text text-danger">Enter a valid username.</div>
+                        }
                     </div>
 
                     <div class="col-md-6">
@@ -43,8 +45,9 @@
                             <input type="email" formControlName="email" class="form-control"
                                 placeholder="user@example.com" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('email')">Provide a valid email
-                            address.</div>
+                        @if (isFieldInvalid('email')) {
+                            <div class="form-text text-danger">Provide a valid email address.</div>
+                        }
                     </div>
 
                     <div class="col-md-6">
@@ -54,8 +57,9 @@
                             <input type="password" formControlName="password" class="form-control"
                                 placeholder="6+ characters" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('password')">Password must be at least
-                            6 characters.</div>
+                        @if (isFieldInvalid('password')) {
+                            <div class="form-text text-danger">Password must be at least 6 characters.</div>
+                        }
                     </div>
 
                     <div class="col-md-6">
@@ -65,8 +69,9 @@
                             <input type="password" formControlName="confirmPassword" class="form-control"
                                 placeholder="Repeat password" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('confirmPassword')">Confirm your
-                            password.</div>
+                        @if (isFieldInvalid('confirmPassword')) {
+                            <div class="form-text text-danger">Confirm your password.</div>
+                        }
                     </div>
 
                     <div class="col-md-6">
@@ -76,8 +81,9 @@
                             <input type="text" formControlName="street" class="form-control"
                                 placeholder="123 Main St" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('street')">Street address is required.
-                        </div>
+                        @if (isFieldInvalid('street')) {
+                            <div class="form-text text-danger">Street address is required.</div>
+                        }
                     </div>
 
                     <div class="col-md-4">
@@ -86,7 +92,9 @@
                             <span class="input-group-text"><i class="fa-solid fa-city"></i></span>
                             <input type="text" formControlName="city" class="form-control" placeholder="City" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('city')">City is required.</div>
+                        @if (isFieldInvalid('city')) {
+                            <div class="form-text text-danger">City is required.</div>
+                        }
                     </div>
 
                     <div class="col-md-4">
@@ -95,7 +103,9 @@
                             <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
                             <input type="text" formControlName="state" class="form-control" placeholder="State" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('state')">State is required.</div>
+                        @if (isFieldInvalid('state')) {
+                            <div class="form-text text-danger">State is required.</div>
+                        }
                     </div>
 
                     <div class="col-md-4">
@@ -104,27 +114,35 @@
                             <span class="input-group-text"><i class="fa-solid fa-square-full"></i></span>
                             <input type="text" formControlName="zipCode" class="form-control" placeholder="Zip" />
                         </div>
-                        <div class="form-text text-danger" *ngIf="isFieldInvalid('zipCode')">Enter a valid ZIP code.
-                        </div>
+                        @if (isFieldInvalid('zipCode')) {
+                            <div class="form-text text-danger">Enter a valid ZIP code.</div>
+                        }
                     </div>
                 </div>
 
-                <div class="alert alert-danger mt-3" *ngIf="apiError">{{ apiError }}</div>
+                @if (apiError) {
+                    <div class="alert alert-danger mt-3">{{ apiError }}</div>
+                }
 
                 <div class="d-grid gap-2 mt-4">
                     <button class="btn btn-primary btn-lg" type="submit" [disabled]="isLoading">
-                        <span *ngIf="!isLoading">Create Account</span>
-                        <span *ngIf="isLoading">Creating account...</span>
+                        @if (!isLoading) {
+                            <span>Create Account</span>
+                        } @else {
+                            <span>Creating account...</span>
+                        }
                     </button>
                 </div>
             </form>
 
-            <div class="registration-help mt-4" *ngIf="registrationSuccess">
-                <p>We have sent a confirmation email. Confirm your email before logging in.</p>
-                <button class="btn btn-outline-secondary btn-sm" type="button" (click)="resendConfirmation()">
-                    Resend confirmation email
-                </button>
-            </div>
+            @if (registrationSuccess) {
+                <div class="registration-help mt-4">
+                    <p>We have sent a confirmation email. Confirm your email before logging in.</p>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="resendConfirmation()">
+                        Resend confirmation email
+                    </button>
+                </div>
+            }
 
             <div class="login-link text-center mt-4">
                 <p>

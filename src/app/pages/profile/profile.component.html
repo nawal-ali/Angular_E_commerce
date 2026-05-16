@@ -4,8 +4,11 @@
     <div class="profile-banner">
         <div class="container">
             <div class="banner-inner">
-                <div class="banner-avatar" *ngIf="!isLoading">{{ getInitials() }}</div>
-                <div class="banner-avatar skeleton-avatar" *ngIf="isLoading"></div>
+                @if (!isLoading) {
+                    <div class="banner-avatar">{{ getInitials() }}</div>
+                } @else {
+                    <div class="banner-avatar skeleton-avatar"></div>
+                }
                 <div>
                     <h1 class="banner-name">{{ user.name || 'My Account' }}</h1>
                     <p class="banner-email">{{ user.email || '' }}</p>
@@ -22,14 +25,16 @@
                 <div class="sidebar-card">
                     <p class="sidebar-label">Dashboard</p>
                     <nav class="sidebar-nav">
-                        <button type="button" *ngFor="let item of menuItems" class="sidebar-item"
-                            [class.active]="selectedTab === item.key" (click)="selectTab(item.key)">
-                            <span class="sidebar-item__icon">
-                                <i class="fa-solid" [ngClass]="item.icon"></i>
-                            </span>
-                            <span>{{ item.label }}</span>
-                            <i class="fa-solid fa-chevron-right sidebar-item__arrow"></i>
-                        </button>
+                        @for (item of menuItems; track item.key) {
+                            <button type="button" class="sidebar-item"
+                                [class.active]="selectedTab === item.key" (click)="selectTab(item.key)">
+                                <span class="sidebar-item__icon">
+                                    <i class="fa-solid" [ngClass]="item.icon"></i>
+                                </span>
+                                <span>{{ item.label }}</span>
+                                <i class="fa-solid fa-chevron-right sidebar-item__arrow"></i>
+                            </button>
+                        }
                     </nav>
                 </div>
             </div>
@@ -51,10 +56,12 @@
                         </div>
                         <div>
                             <h2 class="content-header__title">
-                                <span *ngIf="selectedTab === 'personal'">Personal Information</span>
-                                <span *ngIf="selectedTab === 'address'">Address Information</span>
-                                <span *ngIf="selectedTab === 'orders'">Previous Orders</span>
-                                <span *ngIf="selectedTab === 'password'">Change Password</span>
+                                @switch (selectedTab) {
+                                    @case ('personal') { <span>Personal Information</span> }
+                                    @case ('address')  { <span>Address Information</span> }
+                                    @case ('orders')   { <span>Previous Orders</span> }
+                                    @case ('password') { <span>Change Password</span> }
+                                }
                             </h2>
                             <p class="content-header__sub">Manage your account details</p>
                         </div>
@@ -63,15 +70,18 @@
                     <div class="content-divider"></div>
 
                     <!-- Loading -->
-                    <div *ngIf="isLoading" class="profile-loading">
-                        <i class="fa-solid fa-spinner fa-spin"></i>
-                        <span>Loading profile…</span>
-                    </div>
+                    @if (isLoading) {
+                        <div class="profile-loading">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <span>Loading profile…</span>
+                        </div>
+                    }
 
-                    <div *ngIf="!isLoading">
+                    @if (!isLoading) {
 
                         <!-- ===== PERSONAL TAB ===== -->
-                        <section *ngIf="selectedTab === 'personal'">
+                        @if (selectedTab === 'personal') {
+                        <section>
                             <form (ngSubmit)="saveProfile()">
                                 <div class="form-grid">
 
@@ -112,9 +122,11 @@
                                 </div>
                             </form>
                         </section>
+                        }
 
                         <!-- ===== ADDRESS TAB ===== -->
-                        <section *ngIf="selectedTab === 'address'">
+                        @if (selectedTab === 'address') {
+                        <section>
                             <form (ngSubmit)="saveProfile()">
                                 <div class="form-grid">
 
@@ -164,48 +176,59 @@
                                 </div>
                             </form>
                         </section>
+                        }
 
                         <!-- ===== ORDERS TAB ===== -->
-                        <section *ngIf="selectedTab === 'orders'">
-                            <div *ngIf="isLoadingOrders" class="profile-loading">
-                                <i class="fa-solid fa-spinner fa-spin"></i>
-                                <span>Loading orders…</span>
-                            </div>
-                            <div *ngIf="!isLoadingOrders && previousOrders.length === 0" class="orders-empty">
-                                <i class="fa-solid fa-box-open fa-2x mb-2"></i>
-                                <p>No previous orders found.</p>
-                            </div>
-                            <div *ngIf="!isLoadingOrders && previousOrders.length > 0" class="orders-list">
-                                <div *ngFor="let order of previousOrders" class="order-row"
-                                    (click)="openOrderModal(order)" role="button">
-                                    <div class="order-icon-wrap">
-                                        <i class="fa-solid fa-box"></i>
-                                    </div>
-                                    <div class="order-details">
-                                        <span class="order-id">{{ order.orderId }}</span>
-                                        <span class="order-date">{{ order.date | date:'mediumDate' }}</span>
-                                        <span class="order-transaction">{{ order.transactionType }}</span>
-                                    </div>
-                                    <span class="order-total">{{ order.total }}</span>
-                                    <span class="order-status" [ngClass]="{
-                      'status-delivered': order.status === 'Delivered',
-                      'status-shipped':   order.status === 'Shipped',
-                      'status-pending':   order.status === 'Pending'
-                    }">
-                                        <i class="fa-solid me-1" [ngClass]="{
-                        'fa-check-circle':  order.status === 'Delivered',
-                        'fa-truck':         order.status === 'Shipped',
-                        'fa-clock':         order.status === 'Pending'
-                      }">
-                                        </i>
-                                        {{ order.status }}
-                                    </span>
+                        @if (selectedTab === 'orders') {
+                        <section>
+                            @if (isLoadingOrders) {
+                                <div class="profile-loading">
+                                    <i class="fa-solid fa-spinner fa-spin"></i>
+                                    <span>Loading orders…</span>
                                 </div>
-                            </div>
+                            }
+                            @if (!isLoadingOrders && previousOrders.length === 0) {
+                                <div class="orders-empty">
+                                    <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+                                    <p>No previous orders found.</p>
+                                </div>
+                            }
+                            @if (!isLoadingOrders && previousOrders.length > 0) {
+                                <div class="orders-list">
+                                    @for (order of previousOrders; track order.id) {
+                                    <div class="order-row" (click)="openOrderModal(order)" role="button">
+                                        <div class="order-icon-wrap">
+                                            <i class="fa-solid fa-box"></i>
+                                        </div>
+                                        <div class="order-details">
+                                            <span class="order-id">{{ order.orderId }}</span>
+                                            <span class="order-date">{{ order.date | date:'mediumDate' }}</span>
+                                            <span class="order-transaction">{{ order.transactionType }}</span>
+                                        </div>
+                                        <span class="order-total">{{ order.total }}</span>
+                                        <span class="order-status" [ngClass]="{
+                              'status-delivered': order.status === 'Delivered',
+                              'status-shipped':   order.status === 'Shipped',
+                              'status-pending':   order.status === 'Pending'
+                            }">
+                                            <i class="fa-solid me-1" [ngClass]="{
+                                'fa-check-circle':  order.status === 'Delivered',
+                                'fa-truck':         order.status === 'Shipped',
+                                'fa-clock':         order.status === 'Pending'
+                              }">
+                                            </i>
+                                            {{ order.status }}
+                                        </span>
+                                    </div>
+                                    }
+                                </div>
+                            }
                         </section>
+                        }
 
                         <!-- ===== PASSWORD TAB ===== -->
-                        <section *ngIf="selectedTab === 'password'">
+                        @if (selectedTab === 'password') {
+                        <section>
                             <form (ngSubmit)="changePassword()">
                                 <div class="form-grid single-col">
 
@@ -248,8 +271,9 @@
                                 </div>
                             </form>
                         </section>
+                        }
 
-                    </div>
+                    }
                 </div>
             </div>
 
@@ -260,7 +284,8 @@
 <!-- ===== ORDER DETAIL MODAL ===== -->
 <div class="modal fade" tabindex="-1" #orderModal>
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content order-modal-content" *ngIf="selectedOrder">
+        @if (selectedOrder) {
+        <div class="modal-content order-modal-content">
 
             <div class="modal-header order-modal-header">
                 <div>
@@ -306,32 +331,41 @@
                 <!-- Items -->
                 <h6 class="order-items-title mb-3">Items</h6>
 
-                <div *ngIf="isLoadingItems" class="profile-loading py-3">
-                    <i class="fa-solid fa-spinner fa-spin"></i>
-                    <span>Loading items…</span>
-                </div>
+                @if (isLoadingItems) {
+                    <div class="profile-loading py-3">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <span>Loading items…</span>
+                    </div>
+                }
 
-                <div *ngIf="!isLoadingItems && selectedOrder.items.length === 0" class="orders-empty py-3">
-                    <i class="fa-solid fa-box-open fa-2x mb-2"></i>
-                    <p class="mb-0">No item details available.</p>
-                </div>
+                @if (!isLoadingItems && selectedOrder.items.length === 0) {
+                    <div class="orders-empty py-3">
+                        <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+                        <p class="mb-0">No item details available.</p>
+                    </div>
+                }
 
-                <div *ngIf="!isLoadingItems && selectedOrder.items.length > 0" class="order-items-list">
-                    <div class="order-item-row" *ngFor="let item of selectedOrder.items">
-                        <img *ngIf="item.productImg" [src]="'http://shopbag.runasp.net/Images/'+item.productImg"
-                            [alt]="item.productName" class="order-item-img" />
-                        <div *ngIf="!item.productImg" class="order-item-img-placeholder">
-                            <i class="fa-solid fa-image"></i>
-                        </div>
+                @if (!isLoadingItems && selectedOrder.items.length > 0) {
+                <div class="order-items-list">
+                    @for (item of selectedOrder.items; track $index) {
+                    <div class="order-item-row">
+                        @if (item.productImg) {
+                            <img [src]="'http://shopbag.runasp.net/Images/'+item.productImg"
+                                [alt]="item.productName" class="order-item-img" />
+                        } @else {
+                            <div class="order-item-img-placeholder">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                        }
                         <div class="order-item-info">
                             <span class="order-item-name">{{ item.productName || item.name || 'Product' }}</span>
                             <span class="order-item-qty">Qty: {{ item.quantity || item.count || 1 }}</span>
                         </div>
                         <span class="order-item-price">${{ ((item.totalPrice || 0)).toFixed(2) }}</span>
-                        <!-- <span class="order-item-price">${{ ((item.price || item.unitPrice || 0) * (item.quantity ||
-                            item.count || 1)).toFixed(2) }}</span> -->
                     </div>
+                    }
                 </div>
+                }
 
             </div>
 
@@ -340,5 +374,6 @@
             </div>
 
         </div>
+        }
     </div>
 </div>

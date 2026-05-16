@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class GlobalService {
 
-    isAuthenticated(): boolean {
-  return !!localStorage.getItem('authToken');}
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('authToken');
+  }
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('authToken');
@@ -21,10 +20,10 @@ export class GlobalService {
     const token = localStorage.getItem('authToken');
     if (!token) return [];
     try {
-      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const base64  = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
       const payload = JSON.parse(atob(base64));
       const roleKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
-      const roles = payload[roleKey] ?? payload['role'] ?? [];
+      const roles   = payload[roleKey] ?? payload['role'] ?? [];
       return Array.isArray(roles) ? roles : [roles];
     } catch {
       return [];
@@ -35,4 +34,10 @@ export class GlobalService {
     const roles = this.getUserRoles();
     return roles.includes('AdminRole') || roles.includes('SuperAdminRole');
   }
+
+  // ── NEW ──────────────────────────────────────────────────────────────────────
+  isSeller(): boolean {
+    return this.getUserRoles().includes('SellerRole');
+  }
+  // ─────────────────────────────────────────────────────────────────────────────
 }

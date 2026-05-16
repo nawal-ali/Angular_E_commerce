@@ -1,0 +1,195 @@
+<div class="seller-page">
+
+    <!-- ===== HEADER ===== -->
+    <div class="seller-hero">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h1 class="seller-hero__title">
+                        <i class="fa-solid fa-store me-2"></i>Seller Dashboard
+                    </h1>
+                    <p class="seller-hero__sub">Manage your product listings</p>
+                </div>
+                <button class="btn btn-add" (click)="openAddProduct()" *ngIf="!showForm">
+                    <i class="fa-solid fa-plus me-2"></i>Add New Product
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container seller-body">
+
+        <!-- ===== PRODUCT FORM ===== -->
+        <div class="form-card reveal-form" *ngIf="showForm">
+            <div class="form-card__header">
+                <h4 class="form-card__title">
+                    <i class="fa-solid me-2" [ngClass]="editingId ? 'fa-pen' : 'fa-plus-circle'"></i>
+                    {{ editingId ? 'Edit Product' : 'New Product' }}
+                </h4>
+                <button class="btn-icon-close" (click)="cancelForm()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="form-grid">
+
+                <!-- Image upload -->
+                <div class="field full">
+                    <label class="field-label">Product Image</label>
+                    <div class="img-upload-wrap" (click)="imgInput.click()">
+                        <img *ngIf="productImagePreview" [src]="productImagePreview" class="img-preview" />
+                        <img *ngIf="!productImagePreview && editingMainImg" [src]="imageBase + editingMainImg"
+                            class="img-preview" />
+                        <div *ngIf="!productImagePreview && !editingMainImg" class="img-placeholder">
+                            <i class="fa-solid fa-cloud-arrow-up fa-2x mb-2" style="color: var(--primary-color)"></i>
+                            <p class="mb-0">Click to upload image</p>
+                        </div>
+                    </div>
+                    <input #imgInput type="file" accept="image/*" class="d-none" (change)="onImageSelected($event)" />
+                </div>
+
+                <div class="field full">
+                    <label class="field-label">Product Name *</label>
+                    <input [(ngModel)]="productForm.name" name="name" type="text" class="field-input"
+                        placeholder="Enter product name" />
+                </div>
+
+                <div class="field full">
+                    <label class="field-label">Description</label>
+                    <textarea [(ngModel)]="productForm.description" name="description" class="field-input" rows="3"
+                        placeholder="Describe your product"></textarea>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Price ($) *</label>
+                    <input [(ngModel)]="productForm.price" name="price" type="number" min="0" class="field-input"
+                        placeholder="0.00" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Discount (%)</label>
+                    <input [(ngModel)]="productForm.discount" name="discount" type="number" min="0" max="100"
+                        class="field-input" placeholder="0" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Quantity</label>
+                    <input [(ngModel)]="productForm.quantity" name="quantity" type="number" min="1" class="field-input"
+                        placeholder="1" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Status</label>
+                    <select [(ngModel)]="productForm.status" name="status" class="field-input">
+                        <option [ngValue]="true">Active</option>
+                        <option [ngValue]="false">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Category</label>
+                    <select [(ngModel)]="productForm.categoryId" name="categoryId" class="field-input">
+                        <option [ngValue]="0" disabled>Select category</option>
+                        <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Brand</label>
+                    <select [(ngModel)]="productForm.brandId" name="brandId" class="field-input">
+                        <option [ngValue]="0" disabled>Select brand</option>
+                        <option *ngFor="let b of brands" [ngValue]="b.id">{{ b.name }}</option>
+                    </select>
+                </div>
+
+            </div><!-- /form-grid -->
+
+            <div class="form-footer">
+                <button class="btn-cancel" (click)="cancelForm()">Cancel</button>
+                <button class="btn-save" (click)="saveProduct()" [disabled]="isSaving">
+                    <span *ngIf="!isSaving"><i class="fa-solid fa-floppy-disk me-2"></i>{{ editingId ? 'Update Product'
+                        : 'Create Product' }}</span>
+                    <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2"></span>Saving…</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== STATS BAR ===== -->
+        <div class="stats-bar" *ngIf="!showForm && !isLoading">
+            <div class="stat-chip">
+                <i class="fa-solid fa-box"></i>
+                <span>{{ products.length }} Products</span>
+            </div>
+            <div class="stat-chip">
+                <i class="fa-solid fa-check-circle"></i>
+                <span>{{ activeCount }} Active</span>
+            </div>
+            <div class="stat-chip">
+                <i class="fa-solid fa-tag"></i>
+                <span>{{ discountedCount }} On Sale</span>
+            </div>
+        </div>
+
+        <!-- ===== LOADING ===== -->
+        <div *ngIf="isLoading" class="loading-wrap">
+            <i class="fa-solid fa-spinner fa-spin fa-2x" style="color:var(--primary-color)"></i>
+            <p>Loading your products…</p>
+        </div>
+
+        <!-- ===== EMPTY ===== -->
+        <div *ngIf="!isLoading && !showForm && products.length === 0" class="empty-state text-center py-5">
+            <div class="empty-icon mx-auto mb-4">
+                <i class="fa-solid fa-box-open fa-2x" style="color:var(--primary-color)"></i>
+            </div>
+            <h5 class="fw-bold">No products yet</h5>
+            <p style="color:var(--text-secondary)">Click "Add New Product" to list your first item.</p>
+        </div>
+
+        <!-- ===== PRODUCT GRID ===== -->
+        <div class="row g-4" *ngIf="!isLoading && !showForm && products.length > 0">
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let p of products">
+                <div class="product-card">
+
+                    <!-- Status badge -->
+                    <span class="status-badge" [ngClass]="p.status ? 'badge-active' : 'badge-inactive'">
+                        {{ p.status ? 'Active' : 'Inactive' }}
+                    </span>
+
+                    <!-- Discount badge -->
+                    <span *ngIf="p.discount > 0" class="discount-badge">-{{ p.discount }}%</span>
+
+                    <!-- Image -->
+                    <div class="pc-img-wrap">
+                        <img [src]="imageBase + p.mainImg" [alt]="p.name" class="pc-img"
+                            onerror="this.src='assets/images/placeholder.png'" />
+                    </div>
+
+                    <!-- Body -->
+                    <div class="pc-body">
+                        <p class="pc-category">{{ p.categoryName || '—' }}</p>
+                        <p class="pc-name">{{ p.name }}</p>
+                        <div class="pc-price-row">
+                            <span *ngIf="p.discount > 0" class="pc-old">${{ p.price | number:'1.2-2' }}</span>
+                            <span class="pc-price">${{ getDiscountedPrice(p.price, p.discount) | number:'1.2-2'
+                                }}</span>
+                        </div>
+                        <p class="pc-stock">
+                            <i class="fa-solid fa-cubes me-1"></i>{{ p.quantity }} in stock
+                        </p>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="pc-actions">
+                        <button class="btn-edit" (click)="openEditProduct(p)">
+                            <i class="fa-solid fa-pen-to-square me-1"></i>Edit
+                        </button>
+                        <button class="btn-delete" (click)="deleteProduct(p)">
+                            <i class="fa-solid fa-trash-can me-1"></i>Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

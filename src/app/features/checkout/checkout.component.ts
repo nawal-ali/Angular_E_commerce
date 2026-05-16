@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartService } from '../../core/services/cart.service';   
-
+import { CartService } from '../../core/services/cart.service';
+import { Router } from '@angular/router';
 import { ReactiveFormsModule,FormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ConfirmOrderComponent } from '../confirm-order/confirm-order.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
@@ -43,8 +43,9 @@ checkoutForm = new FormGroup({
 
   });
   constructor(
-    private _cartService: CartService ,
-    private toaster: ToasterService 
+    private _cartService: CartService,
+    private toaster: ToasterService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -97,21 +98,16 @@ getLastFourDigits(): string {
 }
 
 handleFinalPayment() {
-  const finalOrder = {
-    user: this.checkoutForm.value,
-    totalPrice: this.calcTotal(),
-    paymentMethod: this.paymentMethod
-  };
+  const transactionType = this.paymentMethod === 'online' ? 'Online' : 'Cash';
 
-  this._cartService.placeOrder(finalOrder).subscribe({
-    next: (response) => {
-      console.log('Order saved in API:', response);
-      this.toaster.show('Order Saved & Confirmed Successfully!', 'success');
-     
-       
+  this._cartService.placeOrder(transactionType).subscribe({
+    next: () => {
+      this.showSuccessModal = false;
+      this.toaster.show('Order placed successfully!', 'success');
+      this.router.navigate(['/product']);
     },
     error: (err) => {
-      this.toaster.show('Failed to place order.', 'error');
+      this.toaster.show('Failed to place order. Please try again.', 'error');
       console.error(err);
     }
   });

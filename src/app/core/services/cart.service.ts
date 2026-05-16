@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,9 @@ export class CartService {
 
    
   addToCart(productId: number) {
-    return this.http.post(this.baseUrl, { productId, quantity: 1 });
+    return this.http.post(this.baseUrl, { productId, quantity: 1 }).pipe(
+      switchMap(() => this.incrementQty(productId))
+    );
   }
 
   
@@ -43,8 +45,8 @@ export class CartService {
     this.cartCount.next(count);
   }
   
-  placeOrder(orderData: any): Observable<any> {
-   return this.http.post(`http://shopbag.runasp.net/api/Admin/OrderItems`, orderData);
-}
+  placeOrder(transactionType: string): Observable<any> {
+    return this.http.post(`http://shopbag.runasp.net/api/Customer/Orders`, { transactionType });
+  }
  
 }

@@ -67,4 +67,9 @@ export class AdminService {
   getStatistics(): Observable<any[]> {
     return this.http.get<any[]>(`${this.base}/statistics`);
   }
+
+  getOrders(): Observable<any> {
+    return this.http.get<any>(`${this.base}/Orders`);
+  }
+
 }

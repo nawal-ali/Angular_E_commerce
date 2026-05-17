@@ -152,6 +152,7 @@
 .status-badge.active   { background: rgba(46,125,50,0.12);  color: #2E7D32; }
 .status-badge.inactive { background: rgba(211,47,47,0.1);   color: #D32F2F; }
 
+
 .count-badge {
   display: inline-block; background: var(--primary-color-transparent);
   color: var(--primary-color); padding: 2px 10px;

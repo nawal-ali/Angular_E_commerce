@@ -120,18 +120,20 @@
 
             <!-- Cash on Delivery -->
             <div class="payment-option d-flex align-items-center justify-content-between p-3 mb-2 border rounded"
-              [class.active-radio]="paymentMethod === 'cash'" (click)="paymentMethod = 'cash'">
+              [class.active-radio]="paymentMethod === 'cash'"  (click)="selectPayment('cash')">
+                                                                    
               <span><i class="fas fa-money-bill-wave me-3"></i> Cash on Delivery</span>
               <div class="radio-outer">
                 @if (paymentMethod === 'cash') {
                   <div class="radio-inner"></div>
                 }
               </div>
+              
             </div>
 
             <!-- Online Payment Form -->
             <div class="payment-option d-flex align-items-center justify-content-between p-3 border rounded"
-              [class.active-radio]="paymentMethod === 'online'" (click)="paymentMethod = 'online'">
+              [class.active-radio]="paymentMethod === 'online'" (click)="selectPayment('online')">
               <span><i class="fab fa-cc-visa me-3"></i> Credit Card </span>
               <div class="radio-outer">
                 @if (paymentMethod === 'online') {
@@ -238,7 +240,6 @@
               [cardLastFour]="getLastFourDigits()"
               (close)="showSuccessModal = false"
               (confirm)="handleFinalPayment()">
-              >
             </app-confirm-order>
           </div>
         </div>

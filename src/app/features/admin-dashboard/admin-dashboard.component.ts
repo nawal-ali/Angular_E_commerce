@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../core/services/admin.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
 
-type AdminTab = 'users' | 'products' | 'brands' | 'categories' | 'statistics';
+type AdminTab = 'users' | 'products' | 'brands' | 'categories' | 'statistics' | 'orders';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -25,6 +25,8 @@ export class AdminDashboardComponent implements OnInit {
   brands: any[] = [];
   categories: any[] = [];
   stats: any[] = [];
+  orders: any[] = [];
+  ordersCount = 0;
 
   readonly imageBase = 'http://shopbag.runasp.net/Images/';
 
@@ -49,6 +51,7 @@ export class AdminDashboardComponent implements OnInit {
     { key: 'products',   label: 'Products',          icon: 'fa-box' },
     { key: 'brands',     label: 'Brands',            icon: 'fa-tag' },
     { key: 'categories', label: 'Categories',        icon: 'fa-layer-group' },
+    { key: 'orders',     label: 'Orders',            icon: 'fa-receipt' },
     { key: 'statistics', label: 'System Statistics', icon: 'fa-chart-bar' },
   ];
 
@@ -71,6 +74,7 @@ export class AdminDashboardComponent implements OnInit {
     else if (tab === 'products')   this.loadProducts();
     else if (tab === 'brands')     this.loadBrands();
     else if (tab === 'categories') this.loadCategories();
+    else if (tab === 'orders')     this.loadOrders();
     else if (tab === 'statistics') this.loadStatistics();
   }
 
@@ -288,6 +292,23 @@ export class AdminDashboardComponent implements OnInit {
     const linkedCount = this.products.filter(p => p.categoryName === c.name).length;
     this.pendingDelete = { id: c.id, type: 'category', name: c.name, linkedCount };
     this.openDeleteModal();
+  }
+
+  // ── Orders ───────────────────────────────────────────────────────────────────
+  loadOrders(): void {
+    this.isLoading = true;
+    this.adminService.getOrders().subscribe({
+      next: (res: any) => {
+        this.orders = res.orders || res || [];
+        this.ordersCount = res.count ?? this.orders.length;
+        this.isLoading = false;
+      },
+      error: () => { this.toaster.show('Failed to load orders.', 'error'); this.isLoading = false; }
+    });
+  }
+
+  get completedOrders(): number {
+    return this.orders.filter(o => o.transactionStatus === 'Completed').length;
   }
 
   // ── Statistics ────────────────────────────────────────────────────────────────

@@ -8,7 +8,7 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })

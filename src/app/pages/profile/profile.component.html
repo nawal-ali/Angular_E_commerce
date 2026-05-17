@@ -206,18 +206,9 @@
                                             <span class="order-transaction">{{ order.transactionType }}</span>
                                         </div>
                                         <span class="order-total">{{ order.total }}</span>
-                                        <span class="order-status" [ngClass]="{
-                              'status-delivered': order.status === 'Delivered',
-                              'status-shipped':   order.status === 'Shipped',
-                              'status-pending':   order.status === 'Pending'
-                            }">
-                                            <i class="fa-solid me-1" [ngClass]="{
-                                'fa-check-circle':  order.status === 'Delivered',
-                                'fa-truck':         order.status === 'Shipped',
-                                'fa-clock':         order.status === 'Pending'
-                              }">
-                                            </i>
-                                            {{ order.status }}
+                                        <span class="order-status status-delivered">
+                                            <i class="fa-solid fa-check-circle me-1"></i>
+                                            Completed
                                         </span>
                                     </div>
                                     }
@@ -301,17 +292,9 @@
                 <div class="order-meta-row mb-4">
                     <div class="order-meta-item">
                         <span class="meta-label">Status</span>
-                        <span class="order-status" [ngClass]="{
-              'status-delivered': selectedOrder.status === 'Delivered',
-              'status-shipped':   selectedOrder.status === 'Shipped',
-              'status-pending':   selectedOrder.status === 'Pending'
-            }">
-                            <i class="fa-solid me-1" [ngClass]="{
-                'fa-check-circle': selectedOrder.status === 'Delivered',
-                'fa-truck':        selectedOrder.status === 'Shipped',
-                'fa-clock':        selectedOrder.status === 'Pending'
-              }"></i>
-                            {{ selectedOrder.status }}
+                        <span class="order-status status-delivered">
+                            <i class="fa-solid fa-check-circle me-1"></i>
+                            Completed
                         </span>
                     </div>
                     <div class="order-meta-item">

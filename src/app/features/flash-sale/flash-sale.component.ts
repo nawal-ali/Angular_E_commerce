@@ -5,6 +5,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { WishlistService } from '../../core/services/wishlist.service';
+import { CartService } from '../../core/services/cart.service';
+import { GlobalService } from '../../core/services/global.service';
 
 
 @Component({
@@ -17,6 +21,11 @@ export class FlashSaleComponent implements OnInit, OnDestroy {
   private http = inject(HttpClient); 
   private baseUrl = 'http://shopbag.runasp.net/api/';
   
+    constructor(
+      private cartService: CartService,
+      private toaster: ToasterService,
+      private globalService: GlobalService
+    ) {}
   products: any[] = [];
   private subscription?: Subscription;
 
@@ -66,5 +75,50 @@ getFlashSaleProducts() {
   ngOnDestroy() {
     this.subscription?.unsubscribe();
     if (this.timerInterval) clearInterval(this.timerInterval);
+  }
+
+  
+  addToCart(product: any) {
+
+  // CHECK LOGIN
+  if (!this.globalService.isAuthenticated()) {
+
+    this.toaster.show(
+      'Please login or register to add products to cart.',
+      'info'
+    );
+
+    return;
+  }
+
+  this.cartService.addToCart(product.id).subscribe({
+
+    next: () => {
+
+      this.toaster.show(
+        `${product.name} added to cart!`,
+        'success'
+      );
+
+      this.refreshCartCount();
+
+    },
+
+    error: () => {
+
+      this.toaster.show(
+        'Could not add product to cart.',
+        'error'
+      );
+
+    }
+
+  });
+
+}
+  private refreshCartCount() {
+    this.cartService.getCartItems().subscribe(items => {
+      this.cartService.updateCount(items.length);
+    });
   }
 }

@@ -45,8 +45,15 @@ export class CartService {
     this.cartCount.next(count);
   }
   
-  placeOrder(transactionType: string): Observable<any> {
-    return this.http.post(`http://shopbag.runasp.net/api/Customer/Orders`, { transactionType });
-  }
+  // placeOrder(transactionType: string): Observable<any> {
+  //   return this.http.post(`http://shopbag.runasp.net/api/Customer/Orders`, { transactionType });
+  // }
  
+
+  placeOrder(orderData: any): Observable<any> {
+   return this.http.post(
+    `http://shopbag.runasp.net/api/Customer/Orders`, 
+    orderData
+  );
+}
 }

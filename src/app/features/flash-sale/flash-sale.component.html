@@ -32,7 +32,7 @@
               <span class="current-price">{{product.priceAfterDiscount.toFixed(2)}} EGP</span>
               <span class="old-price">{{product.price}} EGP</span>
             </div>
-            <button class="btn btn-add-cart w-100 mt-3">Add to Cart</button>
+            <button class="btn btn-add-cart w-100 mt-3" (click)="addToCart(product)">Add to Cart</button>
           </div>
         </div>
         </div>

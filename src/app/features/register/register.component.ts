@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
-import { GlobalService } from '../../core/services/global.service';
 
 @Component({
   selector: 'app-register',
@@ -16,15 +15,11 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   isLoading = false;
   apiError = '';
-  registrationSuccess = false;
-  showResend = false;
-
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private toaster: ToasterService,
-    private router: Router,
-    private globalService: GlobalService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -74,47 +69,38 @@ export class RegisterComponent implements OnInit {
     };
 
     this.authService.register(payload).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-        this.registrationSuccess = true;
-        this.showResend = true;
-
-        this.toaster.show(response.msg, 'success');
-
-        if (response.token) {
-          localStorage.setItem('authToken', response.token);
-        }
-
-        if (response.user) {
-          localStorage.setItem('user', JSON.stringify(response.user));
-        }
-
-        this.globalService.isLoggedIn();
-        setTimeout(() => this.router.navigate(['/']), 3000);
+      next: () => {
+        this.authService.login({
+          emailOrUserName: payload.email,
+          password: payload.password,
+          rememberMe: false
+        }).subscribe({
+          next: (loginRes: any) => {
+            this.isLoading = false;
+            if (loginRes.token) {
+              localStorage.setItem('authToken', loginRes.token);
+            }
+            if (loginRes.userId) {
+              localStorage.setItem('user', JSON.stringify({
+                id: loginRes.userId,
+                userName: loginRes.userName,
+                email: loginRes.email
+              }));
+            }
+            this.toaster.show('Account created! Welcome!', 'success');
+            this.router.navigate(['/home']);
+          },
+          error: () => {
+            this.isLoading = false;
+            this.toaster.show('Account created! Please log in.', 'success');
+            this.router.navigate(['/login']);
+          }
+        });
       },
       error: (error: any) => {
         this.isLoading = false;
         this.apiError = error.error?.message || 'Registration failed. Please try again.';
         this.toaster.show(this.apiError, 'error');
-      }
-    });
-  }
-
-  resendConfirmation(): void {
-    const email = this.registerForm.get('email')?.value;
-
-    if (!email) {
-      this.toaster.show('Enter your email to resend confirmation.', 'info');
-      return;
-    }
-
-    this.authService.ResendEmailConfirmation(email).subscribe({
-      next: () => {
-        this.toaster.show('Confirmation email resent. Check your inbox.', 'success');
-      },
-      error: (error: any) => {
-        const message = error.error?.message || 'Unable to resend confirmation email.';
-        this.toaster.show(message, 'error');
       }
     });
   }
